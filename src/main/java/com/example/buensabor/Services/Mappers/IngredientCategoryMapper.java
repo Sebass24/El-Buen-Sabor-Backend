@@ -9,8 +9,7 @@ public class IngredientCategoryMapper implements Function<IngredientCategory, In
     @Override
     public IngredientCategoryDTO apply(IngredientCategory ingredientCategory) {
         return new IngredientCategoryDTO(
-                ingredientCategory.getName(),
-                ingredientCategory.getSubIngredientCategories(), //<-- sospechoso no se si funcione
+                ingredientCategory.getName(), //<-- sospechoso no se si funcione
                 ingredientCategory.getParentCategory()
         );
     }

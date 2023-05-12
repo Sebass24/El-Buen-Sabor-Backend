@@ -12,14 +12,13 @@ import java.util.List;
 @Entity
 @Table(name="ingredient")
 @Data //Getters and Setters
-@Builder // Construye el objeto con patron Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Ingredient extends Base{
     private String name;
 
     @OneToOne
-    @JoinColumn(name = "id_category")
+    @JoinColumn(name = "category_id")
     private IngredientCategory ingredientCategory;
 
     private int minimunStock;

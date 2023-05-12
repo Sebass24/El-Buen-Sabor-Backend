@@ -9,13 +9,12 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name="product_detail")
 @Data //Getters and Setters
-@Builder // Construye el objeto con patron Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductDetail extends Base{
 
     @OneToOne
-    @JoinColumn(name = "id_ingredient")
+    @JoinColumn(name = "ingredient_id")
     private Ingredient ingredient;
 
     private double quantity;

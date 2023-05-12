@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name="mp_payment")
 @Data //Getters and Setters
-@Builder // Construye el objeto con patron Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class MercadoPagoPayment extends Base{

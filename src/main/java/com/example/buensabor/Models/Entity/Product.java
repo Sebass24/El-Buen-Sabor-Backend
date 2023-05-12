@@ -13,7 +13,6 @@ import java.util.List;
 @Entity
 @Table(name="product")
 @Data //Getters and Setters
-@Builder // Construye el objeto con patron Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Product extends Base{
@@ -35,6 +34,10 @@ public class Product extends Base{
     private List<Price> price;
 
     @OneToOne
-    @JoinColumn(name = "id_recipe")
+    @JoinColumn(name = "recipe_id")
     private Recipe recipe;
+
+    @OneToOne
+    @JoinColumn(name = "image_id")
+    private Image image;
 }

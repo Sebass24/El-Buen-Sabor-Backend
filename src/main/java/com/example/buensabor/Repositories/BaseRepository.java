@@ -10,5 +10,8 @@ import java.io.Serializable;
 @NoRepositoryBean
 public interface BaseRepository<T extends Base, ID extends Serializable> extends JpaRepository<T,ID> {
 
+//    Ejemplo metodo con query
+//    @Query("select i from Instrumento i where i.nombre like %:filtro% or i.marca like %:filtro% or i.modelo like %:filtro%")
+//    List<Instrumento> search(@Param("filtro") String filtro);
 }
 
