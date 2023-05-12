@@ -12,14 +12,13 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name="bill")
 @Data //Getters and Setters
-@Builder // Construye el objeto con patron Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Bill extends Base{
     private long number;
 
     @OneToOne
-    @JoinColumn(name = "id_order")
+    @JoinColumn(name = "order_id")
     private Order order;
 
     private boolean cancelled;

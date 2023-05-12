@@ -11,14 +11,10 @@ import java.util.List;
 @Entity
 @Table(name="ingredient_category")
 @Data //Getters and Setters
-@Builder // Construye el objeto con patron Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class IngredientCategory extends Base{
     private String name;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "parentCategory")
-    private List<IngredientCategory> subIngredientCategories;
 
     @ManyToOne
     private IngredientCategory parentCategory;

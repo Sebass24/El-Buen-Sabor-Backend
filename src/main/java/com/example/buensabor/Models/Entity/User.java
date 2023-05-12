@@ -12,7 +12,6 @@ import java.util.List;
 @Entity
 @Table(name="user")
 @Data //Getters and Setters
-@Builder // Construye el objeto con patron Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends Base {
@@ -28,13 +27,11 @@ public class User extends Base {
     private String lastName;
 
     @OneToOne
-    @JoinColumn(name = "id_phone")
+    @JoinColumn(name = "phone_id")
     private Phone phoneNumber;
 
     @OneToOne
-    @JoinColumn(name = "id_address")
+    @JoinColumn(name = "address_id")
     private Address address;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    List<Order> orders;
 }

@@ -16,7 +16,6 @@ import java.util.List;
 @Entity
 @Table(name="new_order")
 @Data //Getters and Setters
-@Builder // Construye el objeto con patron Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Order extends Base{
@@ -36,7 +35,8 @@ public class Order extends Base{
 
     private boolean paid;
 
-    @ManyToOne
+    @OneToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "order")

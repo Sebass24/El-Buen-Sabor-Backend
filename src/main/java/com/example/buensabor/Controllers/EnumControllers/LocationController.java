@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin("*")
@@ -17,8 +19,8 @@ public class LocationController {
     @GetMapping("")
     public ResponseEntity<?> getAllEnums() {
         try {
-            Location[] enums = Location.values();
-            return ResponseEntity.status(HttpStatus.OK).body(Arrays.asList(enums));
+            List<String> enums = Arrays.stream(Location.values()).map(loc->loc.getName()).collect(Collectors.toList());
+            return ResponseEntity.status(HttpStatus.OK).body(enums);
         }
         catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
