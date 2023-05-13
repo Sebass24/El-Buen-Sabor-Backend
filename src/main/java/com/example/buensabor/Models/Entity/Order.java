@@ -1,11 +1,10 @@
 package com.example.buensabor.Models.Entity;
 
-import com.example.buensabor.Models.Enum.DeliveryMethod;
-import com.example.buensabor.Models.Enum.OrderStatus;
-import com.example.buensabor.Models.Enum.PaymentMethod;
+import com.example.buensabor.Models.FixedEntities.DeliveryMethod;
+import com.example.buensabor.Models.FixedEntities.OrderStatus;
+import com.example.buensabor.Models.FixedEntities.PaymentMethod;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -20,17 +19,17 @@ import java.util.List;
 @AllArgsConstructor
 public class Order extends Base{
 
-    @Enumerated(EnumType.STRING)
+    @OneToOne
     private DeliveryMethod deliveryMethod;
 
     private Date date;
 
-    @Enumerated(EnumType.STRING)
+    @OneToOne
     private OrderStatus orderStatus;
 
     private Calendar estimatedTime;
 
-    @Enumerated(EnumType.STRING)
+    @OneToOne
     private PaymentMethod paymentMethod;
 
     private boolean paid;

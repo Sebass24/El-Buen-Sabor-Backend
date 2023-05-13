@@ -1,9 +1,8 @@
 package com.example.buensabor.Models.Entity;
 
-import com.example.buensabor.Models.Enum.Location;
+import com.example.buensabor.Models.FixedEntities.Location;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,7 +15,9 @@ public class Address extends Base{
     private String street;
     private String number;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "location", nullable = false)
+    @OneToOne
     private Location location;
+
+    @ManyToOne
+    private User user;
 }

@@ -1,7 +1,7 @@
 package com.example.buensabor.Services.Impl;
 
 import com.example.buensabor.Models.Entity.Product;
-import com.example.buensabor.Models.Enum.ProductCategory;
+import com.example.buensabor.Models.FixedEntities.ProductCategory;
 import com.example.buensabor.Repositories.ProductRepository;
 import com.example.buensabor.Services.ProductService;
 import org.springframework.stereotype.Service;
