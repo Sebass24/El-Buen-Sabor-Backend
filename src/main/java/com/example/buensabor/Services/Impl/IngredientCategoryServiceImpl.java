@@ -1,8 +1,10 @@
 package com.example.buensabor.Services.Impl;
 
+import com.example.buensabor.Exceptions.RepositoryException;
 import com.example.buensabor.Models.Entity.IngredientCategory;
 import com.example.buensabor.Repositories.IngredientCategoryRepository;
 import com.example.buensabor.Services.IngredientCategoryService;
+import org.springframework.boot.web.servlet.server.Session;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,18 +20,7 @@ public class IngredientCategoryServiceImpl extends BaseServiceImpl<IngredientCat
     }
 
     @Override
-    @Transactional
-    public boolean delete(Long id){
-        return false;
-    }
-
-    @Override
-    public void recursiveDelete(IngredientCategory ingredientCategory) {
-
-    }
-
-    @Override
-    public List<IngredientCategory> getAllParents() {
-        return null;
+    public List<IngredientCategory> getCategoryChildren(Long categoryId) throws RepositoryException{
+        return ingredientCategoryRepository.getChildren(categoryId);
     }
 }

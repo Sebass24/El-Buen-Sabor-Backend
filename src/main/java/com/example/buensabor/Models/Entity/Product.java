@@ -1,9 +1,8 @@
 package com.example.buensabor.Models.Entity;
 
-import com.example.buensabor.Models.Enum.ProductCategory;
+import com.example.buensabor.Models.FixedEntities.ProductCategory;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -23,8 +22,7 @@ public class Product extends Base{
     private boolean available;
     private Calendar cookingTime;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "product_category", nullable = false)
+    @OneToOne
     private ProductCategory productCategory;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")

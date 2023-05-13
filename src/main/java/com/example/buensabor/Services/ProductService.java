@@ -1,8 +1,7 @@
 package com.example.buensabor.Services;
 
-import com.example.buensabor.Models.Entity.Order;
 import com.example.buensabor.Models.Entity.Product;
-import com.example.buensabor.Models.Enum.ProductCategory;
+import com.example.buensabor.Models.FixedEntities.ProductCategory;
 
 import java.util.Date;
 import java.util.List;

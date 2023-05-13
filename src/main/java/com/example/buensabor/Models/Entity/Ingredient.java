@@ -1,9 +1,8 @@
 package com.example.buensabor.Models.Entity;
 
-import com.example.buensabor.Models.Enum.MeasurementUnit;
+import com.example.buensabor.Models.FixedEntities.MeasurementUnit;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

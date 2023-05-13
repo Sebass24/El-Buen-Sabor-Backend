@@ -1,9 +1,8 @@
 package com.example.buensabor.Models.Entity;
 
-import com.example.buensabor.Models.Enum.Role;
+import com.example.buensabor.Models.FixedEntities.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,19 +18,16 @@ public class User extends Base {
     private String userEmail;
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
+    @OneToOne
     private Role role;
 
     private String name;
     private String lastName;
 
-    @OneToOne
-    @JoinColumn(name = "phone_id")
-    private Phone phoneNumber;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Address> addresses;
 
-    @OneToOne
-    @JoinColumn(name = "address_id")
-    private Address address;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+    private List<Phone> phones;
 
 }

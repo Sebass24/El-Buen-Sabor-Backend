@@ -3,9 +3,9 @@ package com.example.buensabor.Controllers;
 
 import com.example.buensabor.Models.Entity.IngredientCategory;
 import com.example.buensabor.Services.Impl.IngredientCategoryServiceImpl;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin("*")
@@ -14,5 +14,15 @@ public class IngredientCategoryController extends BaseControllerImpl<IngredientC
 
     public IngredientCategoryController(IngredientCategoryServiceImpl service) {
         super(service);
+    }
+
+    @GetMapping("chindren/{id}")
+    public ResponseEntity<?> getById(@PathVariable Long id){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.getCategoryChildren(id));
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
+        }
     }
 }
