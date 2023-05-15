@@ -18,7 +18,7 @@ public class Location extends Base {
 //    Capital("Capital"),
 //    Guaymallen("Guaymallén"),
 //    LasHeras("Las Heras"),
-//    Lavalle("La Valle"),
+//    Lavalle("Lavalle"),
 //    Junin("Junín"),
 //    LaPaz("La Paz"),
 //    Maipu("Maipú"),

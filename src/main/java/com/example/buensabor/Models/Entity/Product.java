@@ -20,7 +20,7 @@ public class Product extends Base{
     private String description;
     private String shortDescription;
     private boolean available;
-    private Calendar cookingTime;
+    private int cookingTime;
 
     @OneToOne
     private ProductCategory productCategory;

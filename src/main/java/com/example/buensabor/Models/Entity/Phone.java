@@ -1,5 +1,6 @@
 package com.example.buensabor.Models.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
@@ -18,6 +19,7 @@ public class Phone extends Base{
     private String number;
 
     @ManyToOne
+    @JsonIgnore
     private User user;
 
 }
