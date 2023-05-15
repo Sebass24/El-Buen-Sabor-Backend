@@ -24,10 +24,10 @@ public class User extends Base {
     private String name;
     private String lastName;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private List<Address> addresses;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-    private List<Phone> phones;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+//    private List<Address> addresses;
+//
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
+//    private List<Phone> phones;
 
 }

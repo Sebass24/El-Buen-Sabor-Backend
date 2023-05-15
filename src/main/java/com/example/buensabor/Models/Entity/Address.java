@@ -1,6 +1,7 @@
 package com.example.buensabor.Models.Entity;
 
 import com.example.buensabor.Models.FixedEntities.Location;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,5 +20,6 @@ public class Address extends Base{
     private Location location;
 
     @ManyToOne
+    @JsonIgnore
     private User user;
 }

@@ -1,9 +1,7 @@
 package com.example.buensabor.Models.Entity;
 
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
+import lombok.Cleanup;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -14,7 +12,9 @@ public class Base implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private boolean deleted;
+
+    @Column(name = "deleted", columnDefinition = "boolean default false")
+    private boolean deleted = false;
 
 //    @Column(name = "fecha_alta")
 //    @Temporal(TemporalType.TIMESTAMP)

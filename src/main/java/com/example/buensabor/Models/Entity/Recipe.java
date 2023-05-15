@@ -1,5 +1,6 @@
 package com.example.buensabor.Models.Entity;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -13,5 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Recipe extends Base{
+
+    @Column(name = "description", columnDefinition = "MEDIUMTEXT")
     private String description;
 }
