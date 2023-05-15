@@ -4,6 +4,7 @@ import com.example.buensabor.Models.Entity.Product;
 import com.example.buensabor.Models.FixedEntities.ProductCategory;
 import com.example.buensabor.Repositories.ProductRepository;
 import com.example.buensabor.Services.ProductService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -14,6 +15,9 @@ import java.util.stream.Collectors;
 public class ProductServiceImpl extends BaseServiceImpl<Product,Long> implements ProductService {
 
     private ProductRepository productRepository;
+
+    @Value("${product.profit}")
+    private String profit;
 
     public ProductServiceImpl(ProductRepository productRepository) {
         super(productRepository);
@@ -43,5 +47,10 @@ public class ProductServiceImpl extends BaseServiceImpl<Product,Long> implements
     @Override
     public List<Product> getBestSellersFromToByCategory(int top, ProductCategory category, Date from, Date to) {
         return null;
+    }
+
+    @Override
+    public void updatePrices() {
+
     }
 }
