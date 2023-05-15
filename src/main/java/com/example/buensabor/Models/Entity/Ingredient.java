@@ -22,11 +22,9 @@ public class Ingredient extends Base{
 
     private int minimunStock;
     private int currentStock;
+    private Double costPrice;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "mesurementUnit", nullable = false)
     private MeasurementUnit measurementUnit;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "ingredient")
-    private List<Price> prices;
 }

@@ -28,8 +28,7 @@ public class Product extends Base{
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
     private List<ProductDetail> productDetails;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
-    private List<Price> price;
+    private Double sellPrice;
 
     @OneToOne
     @JoinColumn(name = "recipe_id")
