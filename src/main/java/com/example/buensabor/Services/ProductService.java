@@ -12,4 +12,5 @@ public interface ProductService extends BaseService<Product,Long> {
     public List<Product> getByName(String name);
     public List<Product> getBestSellersAllTimesByCategory(int top, ProductCategory category);
     public List<Product> getBestSellersFromToByCategory(int top, ProductCategory category, Date from, Date to);
+    public void updatePrices();
 }

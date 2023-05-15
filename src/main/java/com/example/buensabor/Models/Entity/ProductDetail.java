@@ -1,5 +1,6 @@
 package com.example.buensabor.Models.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,5 +21,6 @@ public class ProductDetail extends Base{
     private double quantity;
 
     @ManyToOne
+    @JsonIgnore
     private Product product;
 }
