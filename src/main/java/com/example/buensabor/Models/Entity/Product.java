@@ -17,8 +17,11 @@ import java.util.List;
 public class Product extends Base{
 
     private String name;
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
     private String shortDescription;
+
+    @Column(name = "available", columnDefinition = "boolean default true")
     private boolean available;
     private int cookingTime;
 

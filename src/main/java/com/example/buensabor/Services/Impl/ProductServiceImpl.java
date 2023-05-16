@@ -26,17 +26,12 @@ public class ProductServiceImpl extends BaseServiceImpl<Product,Long> implements
 
     @Override
     public List<Product> getByCategory(String category) {
-        return productRepository.findAll().stream().filter(prod -> prod.getProductCategory()
-                    .toString()
-                    .equalsIgnoreCase(category))
-                .collect(Collectors.toList());
+        return productRepository.getByCategory(category);
     }
 
     @Override
     public List<Product> getByName(String name) {
-        return productRepository.findAll().stream().filter(prod -> prod.getName()
-                        .equalsIgnoreCase(name))
-                .collect(Collectors.toList());
+        return productRepository.getByName(name);
     }
 
     @Override
