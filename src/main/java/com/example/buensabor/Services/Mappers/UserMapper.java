@@ -5,6 +5,8 @@ import com.example.buensabor.Models.Entity.Address;
 import com.example.buensabor.Models.Entity.User;
 import com.example.buensabor.Repositories.AddressRepository;
 import com.example.buensabor.Repositories.PhoneRepository;
+import com.example.buensabor.Services.Impl.AddressServiceImpl;
+import com.example.buensabor.Services.Impl.PhoneServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,11 +16,13 @@ import java.util.function.Function;
 @Service
 public class UserMapper implements Function<User, UserDTO> {
 
-    @Autowired
-    AddressRepository addressRepository;
+    private AddressServiceImpl addressService;
+    private PhoneServiceImpl phoneService;
 
-    @Autowired
-    PhoneRepository phoneRepository;
+    public UserMapper(AddressServiceImpl addressService, PhoneServiceImpl phoneService) {
+        this.addressService = addressService;
+        this.phoneService = phoneService;
+    }
 
     @Override
     public UserDTO apply(User user) { //Usar mapStruct (libreria)
@@ -28,8 +32,8 @@ public class UserMapper implements Function<User, UserDTO> {
                 user.getRole(),
                 user.getName(),
                 user.getLastName(),
-                addressRepository.getAddresByUser(user.getId()),
-                phoneRepository.getPhonesByUser(user.getId())
+                addressService.getAddressesbyUser(user.getId()),
+                phoneService.getPhonesByUser(user.getId())
         );
     }
 }

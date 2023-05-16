@@ -1,6 +1,7 @@
 package com.example.buensabor.Services.Impl;
 
 import com.example.buensabor.Models.Entity.Product;
+import com.example.buensabor.Models.Entity.ProductDetail;
 import com.example.buensabor.Models.FixedEntities.ProductCategory;
 import com.example.buensabor.Repositories.ProductRepository;
 import com.example.buensabor.Services.ProductService;
@@ -8,20 +9,23 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 @Service
 public class ProductServiceImpl extends BaseServiceImpl<Product,Long> implements ProductService {
 
     private ProductRepository productRepository;
+    private OrderDetailServiceImpl orderDetailService;
 
     @Value("${product.profit}")
     private String profit;
 
-    public ProductServiceImpl(ProductRepository productRepository) {
+    public ProductServiceImpl(ProductRepository productRepository, OrderDetailServiceImpl orderDetailService) {
         super(productRepository);
         this.productRepository = productRepository;
+        this.orderDetailService = orderDetailService;
     }
 
     @Override
@@ -35,8 +39,13 @@ public class ProductServiceImpl extends BaseServiceImpl<Product,Long> implements
     }
 
     @Override
-    public List<Product> getBestSellersAllTimesByCategory(int top, ProductCategory category) {
-        return null;
+    public Map<String,Integer> getProductRanking(String category) {
+        List<Product> products = getByCategory(category);
+        Map<String,Integer> productRanking = new HashMap<>();
+        products.stream().map(p ->
+                productRanking.put(p.getName(), orderDetailService.countOrdersDetailByProduct(p.getId())));
+
+        return productRanking;
     }
 
     @Override
@@ -44,8 +53,34 @@ public class ProductServiceImpl extends BaseServiceImpl<Product,Long> implements
         return null;
     }
 
+    public double getProductCost(Product product){
+
+        List<ProductDetail> pDetails = product.getProductDetails();
+        Double subTotal = 0.;
+        for (ProductDetail pd: pDetails) {
+            subTotal += pd.getIngredient().getCostPrice() * pd.getQuantity();
+        }
+        return subTotal;
+    }
+
+    private double getProductSellPrice(Product product){
+
+        List<ProductDetail> pDetails = product.getProductDetails();
+        Double subTotal = 0.;
+        for (ProductDetail pd: pDetails) {
+            subTotal += pd.getIngredient().getCostPrice() * pd.getQuantity();
+        }
+
+        return (double) (Math.round(subTotal / 10.0) * 10) * Double.valueOf(profit);
+    }
+
     @Override
     public void updatePrices() {
+        List<Product> products = productRepository.findAll();
+
+        for (Product prod: products) {
+            prod.setSellPrice(getProductSellPrice(prod));
+        }
 
     }
 }
