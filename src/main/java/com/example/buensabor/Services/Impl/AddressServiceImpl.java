@@ -18,4 +18,8 @@ public class AddressServiceImpl extends BaseServiceImpl<Address,Long> implements
         this.addressRepository = addressRepository;
     }
 
+    @Override
+    public List<Address> getAddressesbyUser(Long id) {
+        return addressRepository.getAddressesByUser(id);
+    }
 }

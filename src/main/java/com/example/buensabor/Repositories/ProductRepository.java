@@ -1,6 +1,7 @@
 package com.example.buensabor.Repositories;
 
 import com.example.buensabor.Models.Entity.Product;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -18,4 +19,6 @@ public interface ProductRepository extends BaseRepository<Product,Long> {
 
     @Query("select p from Product p where p.name like %:name%")
     List<Product> getByName(@Param("name") String name);
+
+
 }

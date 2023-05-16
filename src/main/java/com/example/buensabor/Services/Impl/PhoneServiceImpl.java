@@ -5,6 +5,8 @@ import com.example.buensabor.Repositories.PhoneRepository;
 import com.example.buensabor.Services.PhoneService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class PhoneServiceImpl extends BaseServiceImpl<Phone,Long> implements PhoneService {
 
@@ -15,4 +17,8 @@ public class PhoneServiceImpl extends BaseServiceImpl<Phone,Long> implements Pho
         this.phoneRepository = phoneRepository;
     }
 
+    @Override
+    public List<Phone> getPhonesByUser(Long id) {
+        return phoneRepository.getPhonesByUser(id);
+    }
 }

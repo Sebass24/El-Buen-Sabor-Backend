@@ -15,26 +15,26 @@ import java.util.List;
 public class UserServiceImpl extends BaseServiceImpl<User,Long> implements UserService {
 
     private UserRepository userRepository; // dependencies injection
-    private AddressRepository addressRepository;
-    private PhoneRepository phoneRepository;
+    private AddressServiceImpl addressService;
+    private PhoneServiceImpl phoneService;
 
-    public UserServiceImpl(UserRepository userRepository, AddressRepository addressRepository, PhoneRepository phoneRepository) {
+    public UserServiceImpl(UserRepository userRepository, AddressRepository addressRepository, PhoneRepository phoneRepository, AddressServiceImpl addressService, PhoneServiceImpl phoneService) {
         super(userRepository);
         this.userRepository = userRepository;
-        this.addressRepository = addressRepository;
-        this.phoneRepository = phoneRepository;
+        this.addressService = addressService;
+        this.phoneService = phoneService;
     }
 
 
     @Override
     public List<Address> getUserAddresses(Long userId) {
-        List<Address> userAddresses = addressRepository.getAddresByUser(userId);
+        List<Address> userAddresses = addressService.getAddressesbyUser(userId);
         return userAddresses;
     }
 
     @Override
     public List<Phone> getUserPhones(Long userId) {
-        List<Phone> userPhones = phoneRepository.getPhonesByUser(userId);
+        List<Phone> userPhones = phoneService.getPhonesByUser(userId);
         return userPhones;
     }
 }

@@ -11,6 +11,6 @@ import java.util.List;
 public interface AddressRepository extends BaseRepository<Address,Long> {
 
     @Query("select a from Address a where a.user.id = :id")
-    List<Address> getAddresByUser(@Param("id") Long id);
+    List<Address> getAddressesByUser(@Param("id") Long id);
 
 }
