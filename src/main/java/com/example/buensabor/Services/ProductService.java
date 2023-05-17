@@ -14,4 +14,5 @@ public interface ProductService extends BaseService<Product,Long> {
     public Map<String,Integer> getProductRanking(String category);
     public List<Product> getBestSellersFromToByCategory(int top, ProductCategory category, Date from, Date to);
     public void updatePrices();
+    public List<Product> getRandom(int quantity);
 }

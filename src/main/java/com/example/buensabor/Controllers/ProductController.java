@@ -36,10 +36,20 @@ public class ProductController extends BaseControllerImpl<Product, ProductServic
         }
     }
 
-    @GetMapping("/ranking")
+    @GetMapping("/ranking/{category}")
     public ResponseEntity<?> getProductsRanking(@PathVariable String category){
         try {
             return ResponseEntity.status(HttpStatus.OK).body(service.getProductRanking(category));
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
+        }
+    }
+
+    @GetMapping("/random/{quantity}")
+    public ResponseEntity<?> getRandom(@PathVariable int quantity){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.getRandom(quantity));
         }
         catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");

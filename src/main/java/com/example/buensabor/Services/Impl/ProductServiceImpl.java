@@ -8,10 +8,8 @@ import com.example.buensabor.Services.ProductService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl extends BaseServiceImpl<Product,Long> implements ProductService {
@@ -82,5 +80,16 @@ public class ProductServiceImpl extends BaseServiceImpl<Product,Long> implements
             prod.setSellPrice(getProductSellPrice(prod));
         }
 
+    }
+
+    @Override
+    public List<Product> getRandom(int quantity) {
+        List<Product> products = productRepository.getAvailable();
+        Collections.shuffle(products);
+        return products
+                .stream()
+                .distinct()
+                .limit(quantity)
+                .collect(Collectors.toList());
     }
 }
