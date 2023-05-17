@@ -17,6 +17,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.List;
 
 
 @Configuration
@@ -31,7 +32,7 @@ public class SecurityConfiguration {
     private String issuer;
 
     @Value("${web.cors.allowed-origins}")
-    private String corsAllowedOrigins;
+    private List<String> corsAllowedOrigins;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -50,7 +51,7 @@ public class SecurityConfiguration {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList(corsAllowedOrigins));
+        configuration.setAllowedOrigins(corsAllowedOrigins);
         configuration.setAllowedMethods(Arrays.asList("*"));
         configuration.setAllowCredentials(true);
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Requestor-Type"));
