@@ -14,11 +14,13 @@ public interface ProductRepository extends BaseRepository<Product,Long> {
 //    @Query("select o from Order o where o.de)
 //    List<Product> search(@Param("filtro") String filtro);
 
-    @Query("select p from Product p where p.productCategory.description like %:category%")
+    @Query("select p from Product p where p.productCategory.description like %:category% and p.deleted = false")
     List<Product> getByCategory(@Param("category") String category);
 
-    @Query("select p from Product p where p.name like %:name%")
+    @Query("select p from Product p where p.name like %:name% and p.deleted = false")
     List<Product> getByName(@Param("name") String name);
 
+    @Query("select p from Product p where p.deleted = false and p.available = true")
+    List<Product> getAvailable();
 
 }
