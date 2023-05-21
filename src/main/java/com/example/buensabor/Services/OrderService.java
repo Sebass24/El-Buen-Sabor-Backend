@@ -11,6 +11,7 @@ public interface OrderService extends BaseService<Order,Long> {
     //Agregamos todos los metodos que solo pertenecen a User, lo agregamos a la interfaz para mantener el orden
 
     List<Order> getOrdersByDates(Date from, Date since);
+    void changeStatus(Long orderId,Long newOrderStatusId);
     public List<Order> getByStatus(String status);
     public Double getCost(Order order);
     public Double getGain(Order order);

@@ -20,11 +20,19 @@ public class Ingredient extends Base{
     @JoinColumn(name = "category_id")
     private IngredientCategory ingredientCategory;
 
-    private int minimumStock;
-    private int currentStock;
+    private Double minimumStock;
+    private Double currentStock;
     private Double costPrice;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "measurementUnit", nullable = false)
     private MeasurementUnit measurementUnit;
+
+    public void addStock(double quantity){
+        this.currentStock += quantity;
+    }
+
+    public void decrementStock(double quantity){
+        this.currentStock = this.currentStock - quantity;
+    }
 }
