@@ -4,6 +4,7 @@ import com.example.buensabor.Models.Entity.Base;
 import com.example.buensabor.Services.Impl.BaseServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 public abstract class BaseControllerImpl<T extends Base, S extends BaseServiceImpl<T,Long>> implements BaseController<T, Long> {
