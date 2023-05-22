@@ -37,14 +37,12 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests()
-                .requestMatchers(HttpMethod.OPTIONS).permitAll()
                 .requestMatchers("/api/public").permitAll()
+                .requestMatchers("/api/v1/private").authenticated()
+                .requestMatchers("/api/v1/admin").hasAuthority("Admin")
                 .requestMatchers("/**").permitAll()
                 .and().cors().configurationSource(corsConfigurationSource())
-                .and().oauth2ResourceServer()
-                    .jwt()
-                        .decoder(jwtDecoder())
-                        .jwtAuthenticationConverter(jwtAuthenticationConverter());
+                .and().oauth2ResourceServer().jwt();
         http.csrf().disable();
         return http.build();
     }
