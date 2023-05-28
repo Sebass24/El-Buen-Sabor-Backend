@@ -26,5 +26,6 @@ public class ProductDetail extends Base{
 
     @ManyToOne
     @JsonIgnore
+    @JoinColumn(name = "product_id")
     private Product product;
 }

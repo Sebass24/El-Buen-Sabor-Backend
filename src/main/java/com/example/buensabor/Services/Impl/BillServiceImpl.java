@@ -15,4 +15,8 @@ public class BillServiceImpl extends BaseServiceImpl<Bill,Long> implements BillS
         this.billRepository = billRepository;
     }
 
+    @Override
+    public String generateBill(Bill bill) {
+        return null;
+    }
 }

@@ -1,5 +1,6 @@
 package com.example.buensabor.Services.Impl;
 
+import com.example.buensabor.Exceptions.ServiceException;
 import com.example.buensabor.Models.Entity.Product;
 import com.example.buensabor.Models.Entity.ProductDetail;
 import com.example.buensabor.Models.FixedEntities.ProductCategory;
@@ -7,6 +8,7 @@ import com.example.buensabor.Repositories.ProductRepository;
 import com.example.buensabor.Services.ProductService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,15 +18,41 @@ public class ProductServiceImpl extends BaseServiceImpl<Product,Long> implements
 
     private ProductRepository productRepository;
     private OrderDetailServiceImpl orderDetailService;
+    private ProductDetailServiceImpl productDetailService;
+
 
     @Value("${product.profit}")
     private String profit;
 
-    public ProductServiceImpl(ProductRepository productRepository, OrderDetailServiceImpl orderDetailService) {
+    public ProductServiceImpl(ProductRepository productRepository, OrderDetailServiceImpl orderDetailService, ProductDetailServiceImpl productDetailService) {
         super(productRepository);
         this.productRepository = productRepository;
         this.orderDetailService = orderDetailService;
+        this.productDetailService = productDetailService;
     }
+
+    @Override
+    @Transactional
+    public Product save(Product entity) throws ServiceException {
+        try {
+            List<ProductDetail> productDetails = entity.getProductDetails();
+            productDetails.forEach(productDetail -> {
+                try {
+                    productDetailService.save(productDetail);
+                } catch (ServiceException e) {
+                    e.printStackTrace();
+                }
+            });
+
+            entity = baseRepository.save(entity);
+            return entity;
+
+        }catch (Exception e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+
 
     @Override
     public List<Product> getByCategory(String category) {

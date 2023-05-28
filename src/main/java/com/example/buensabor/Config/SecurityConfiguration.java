@@ -39,6 +39,7 @@ public class SecurityConfiguration {
         http.authorizeHttpRequests()
                 .requestMatchers("/api/public").permitAll()
                 .requestMatchers("/api/v1/private").authenticated()
+                .requestMatchers("/api/product").permitAll()
                 .requestMatchers("/api/v1/admin").hasAuthority("Admin")
                 .requestMatchers("/**").permitAll()
                 .and().cors().configurationSource(corsConfigurationSource())
