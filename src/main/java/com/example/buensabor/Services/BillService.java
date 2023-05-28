@@ -4,4 +4,5 @@ import com.example.buensabor.Models.Entity.Bill;
 
 public interface BillService extends BaseService<Bill,Long> {
 
+    String generateBill(Bill bill);
 }

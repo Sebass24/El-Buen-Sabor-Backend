@@ -16,6 +16,7 @@ public class ProductController extends BaseControllerImpl<Product, ProductServic
         super(service);
     }
 
+
     @GetMapping("/category/{category}")
     public ResponseEntity<?> getByCategory(@PathVariable String category){
         try {
