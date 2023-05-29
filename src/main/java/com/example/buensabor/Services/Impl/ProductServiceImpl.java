@@ -3,6 +3,7 @@ package com.example.buensabor.Services.Impl;
 import com.example.buensabor.Exceptions.ServiceException;
 import com.example.buensabor.Models.Entity.Product;
 import com.example.buensabor.Models.Entity.ProductDetail;
+import com.example.buensabor.Models.Entity.Recipe;
 import com.example.buensabor.Models.FixedEntities.ProductCategory;
 import com.example.buensabor.Repositories.ProductRepository;
 import com.example.buensabor.Services.ProductService;
@@ -19,16 +20,18 @@ public class ProductServiceImpl extends BaseServiceImpl<Product,Long> implements
     private ProductRepository productRepository;
     private OrderDetailServiceImpl orderDetailService;
     private ProductDetailServiceImpl productDetailService;
+    private RecipeServiceImpl recipeService;
 
 
     @Value("${product.profit}")
     private String profit;
 
-    public ProductServiceImpl(ProductRepository productRepository, OrderDetailServiceImpl orderDetailService, ProductDetailServiceImpl productDetailService) {
+    public ProductServiceImpl(ProductRepository productRepository, OrderDetailServiceImpl orderDetailService, ProductDetailServiceImpl productDetailService, RecipeServiceImpl recipeService) {
         super(productRepository);
         this.productRepository = productRepository;
         this.orderDetailService = orderDetailService;
         this.productDetailService = productDetailService;
+        this.recipeService = recipeService;
     }
 
     @Override
@@ -36,8 +39,15 @@ public class ProductServiceImpl extends BaseServiceImpl<Product,Long> implements
     public Product save(Product entity) throws ServiceException {
         try {
             List<ProductDetail> pd = entity.getProductDetails();
-
             pd.forEach(productDetail -> productDetail.setProduct(entity));
+
+            Recipe recipe = entity.getRecipe();
+
+            if(recipe != null){
+                recipeService.save(recipe);
+                entity.setRecipe(recipe);
+            }
+
 
             Product product = productRepository.save(entity);
             return product;
