@@ -40,7 +40,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product,Long> implements
         try {
             List<ProductDetail> pd = entity.getProductDetails();
             pd.forEach(productDetail -> productDetail.setProduct(entity));
-
+            entity.setImage(null);
             Recipe recipe = entity.getRecipe();
 
             if(recipe != null){
@@ -63,7 +63,7 @@ public class ProductServiceImpl extends BaseServiceImpl<Product,Long> implements
             if (entity.getId() == null) {
                 throw new ServiceException("La entidad a modificar debe contener un Id.");
             }
-
+            entity.setImage(null);
             List<ProductDetail> pd = entity.getProductDetails();
             pd.forEach(productDetail -> productDetail.setProduct(entity));
             Product product = productRepository.save(entity);
