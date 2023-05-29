@@ -35,24 +35,34 @@ public class ProductServiceImpl extends BaseServiceImpl<Product,Long> implements
     @Transactional
     public Product save(Product entity) throws ServiceException {
         try {
-            List<ProductDetail> productDetails = entity.getProductDetails();
-            productDetails.forEach(productDetail -> {
-                try {
-                    productDetailService.save(productDetail);
-                } catch (ServiceException e) {
-                    e.printStackTrace();
-                }
-            });
+            List<ProductDetail> pd = entity.getProductDetails();
 
-            entity = baseRepository.save(entity);
-            return entity;
+            pd.forEach(productDetail -> productDetail.setProduct(entity));
 
+            Product product = productRepository.save(entity);
+            return product;
         }catch (Exception e) {
             throw new ServiceException(e.getMessage());
         }
     }
 
+    @Override
+    @Transactional
+    public Product update(Product entity) throws ServiceException {
+        try {
+            if (entity.getId() == null) {
+                throw new ServiceException("La entidad a modificar debe contener un Id.");
+            }
 
+            List<ProductDetail> pd = entity.getProductDetails();
+            pd.forEach(productDetail -> productDetail.setProduct(entity));
+            Product product = productRepository.save(entity);
+
+            return product;
+        }catch (Exception e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
 
     @Override
     public List<Product> getByCategory(String category) {
