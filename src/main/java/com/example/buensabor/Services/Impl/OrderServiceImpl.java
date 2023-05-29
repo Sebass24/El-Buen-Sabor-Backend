@@ -3,6 +3,7 @@ package com.example.buensabor.Services.Impl;
 import com.example.buensabor.Exceptions.ServiceException;
 import com.example.buensabor.Models.Entity.Order;
 import com.example.buensabor.Models.Entity.OrderDetail;
+import com.example.buensabor.Models.Entity.Product;
 import com.example.buensabor.Models.Entity.ProductDetail;
 import com.example.buensabor.Repositories.OrderRepository;
 import com.example.buensabor.Services.OrderService;
@@ -36,8 +37,31 @@ public class OrderServiceImpl extends BaseServiceImpl<Order,Long> implements Ord
     public Order save(Order entity) throws ServiceException {
         try {
             decrementIngredientStock(entity);
-            entity = baseRepository.save(entity);
-            return entity;
+            List<OrderDetail> od = entity.getOrderDetails();
+
+            od.forEach(orderDetail -> orderDetail.setOrder(entity));
+
+            Order order = baseRepository.save(entity);
+            return order;
+
+        }catch (Exception e) {
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    @Override
+    @Transactional
+    public Order update(Order entity) throws ServiceException {
+        try {
+            if (entity.getId() == null) {
+                throw new ServiceException("La entidad a modificar debe contener un Id.");
+            }
+
+            List<OrderDetail> pd = entity.getOrderDetails();
+            pd.forEach(orderDetail -> orderDetail.setOrder(entity));
+            Order order = orderRepository.save(entity);
+
+            return order;
         }catch (Exception e) {
             throw new ServiceException(e.getMessage());
         }

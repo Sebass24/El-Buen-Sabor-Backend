@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.NonNull;
 
 @Entity
 @Table(name="product_detail")
@@ -25,7 +26,7 @@ public class ProductDetail extends Base{
     private double quantity;
 
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "product_id")
+    @JsonIgnore
     private Product product;
 }

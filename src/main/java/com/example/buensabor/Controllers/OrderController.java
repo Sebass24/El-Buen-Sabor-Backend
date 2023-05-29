@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "api/order")
 public class OrderController extends BaseControllerImpl<Order, OrderServiceImpl>{
 
+    private OrderServiceImpl service;
+
     public OrderController(OrderServiceImpl service) {
         super(service);
     }

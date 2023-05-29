@@ -20,6 +20,7 @@ public class OrderDetail extends Base{
     private double quantity;
 
     @ManyToOne
+    @JoinColumn(name = "order_id")
     @JsonIgnore
     private Order order;
 }
