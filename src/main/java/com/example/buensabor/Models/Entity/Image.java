@@ -18,6 +18,5 @@ public class Image extends Base{
     private String name;
     private String path;
     @Transient
-    @JsonIgnore
     private MultipartFile imagen;
 }
