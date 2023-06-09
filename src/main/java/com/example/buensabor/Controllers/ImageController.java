@@ -2,10 +2,15 @@ package com.example.buensabor.Controllers;
 
 import com.example.buensabor.Models.Entity.Image;
 import com.example.buensabor.Services.Impl.ImageServiceImpl;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @CrossOrigin("*")
@@ -29,5 +34,23 @@ public class ImageController extends BaseControllerImpl<Image, ImageServiceImpl>
 
     }
 
+    @GetMapping("/file/{id}")
+    public ResponseEntity<?> downloadFile(@PathVariable Long id) throws IOException {
+        // Obtén el archivo MultipartFile desde alguna fuente
+        MultipartFile file = service.getImageById(id);
+
+        // Crea un InputStreamResource a partir del archivo
+        InputStreamResource resource = new InputStreamResource(file.getInputStream());
+
+        // Configura las cabeceras de la respuesta
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentDispositionFormData("attachment", file.getOriginalFilename());
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+
+        // Devuelve la respuesta con el archivo adjunto
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(resource);
+    }
 
 }

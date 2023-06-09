@@ -6,8 +6,14 @@ import com.example.buensabor.Services.ImageService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.mock.web.MockMultipartFile;
+
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -39,6 +45,24 @@ public class ImageServiceImpl extends BaseServiceImpl<Image,Long> implements Ima
         }catch (Exception e) {
             throw new ServiceException(e.getMessage());
         }
+    }
+
+    public MultipartFile getImageById(Long id){
+        Optional<Image> img = imageRepository.findById(id);
+
+        if (img.isPresent()){
+            File file = new File(img.get().getPath());
+
+            MultipartFile multipartFile;
+            try {
+                FileInputStream fileInputStream = new FileInputStream(file);
+                multipartFile = new MockMultipartFile(file.getName(), fileInputStream);
+                return multipartFile;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+    }
+        return null;
     }
 
 //    @Transactional
