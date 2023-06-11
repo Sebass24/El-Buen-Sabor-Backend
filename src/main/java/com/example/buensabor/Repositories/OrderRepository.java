@@ -1,5 +1,6 @@
 package com.example.buensabor.Repositories;
 
+import com.example.buensabor.Models.Entity.Ingredient;
 import com.example.buensabor.Models.Entity.Order;
 import com.example.buensabor.Models.Entity.Product;
 import org.springframework.data.jpa.repository.Query;
@@ -17,6 +18,9 @@ public interface OrderRepository extends BaseRepository<Order,Long> {
 
     @Query("select o from Order o where o.orderStatus.description = :status")
     List<Order> getOrdersByStatus(@Param("status") String status);
+
+    @Query("select o from Order o where o.orderStatus.description = :status or :status = '' and o.id = :id")
+    List<Order> getOrdersByStatusAndId(@Param("status") String status, @Param("id") Long id);
 
 
 }

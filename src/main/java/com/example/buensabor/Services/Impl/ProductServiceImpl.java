@@ -140,4 +140,11 @@ public class ProductServiceImpl extends BaseServiceImpl<Product,Long> implements
                 .limit(quantity)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<Object> getTopProducts(String category, Date startDate, Date endDate) {
+         return productRepository.getTopProducts(category,startDate,endDate);
+    }
+
+
 }

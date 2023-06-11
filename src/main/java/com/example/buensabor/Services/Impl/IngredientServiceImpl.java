@@ -2,12 +2,14 @@ package com.example.buensabor.Services.Impl;
 
 import com.example.buensabor.Exceptions.StockException;
 import com.example.buensabor.Models.Entity.Ingredient;
+import com.example.buensabor.Models.Entity.Product;
 import com.example.buensabor.Models.FixedEntities.MeasurementUnit;
 import com.example.buensabor.Repositories.IngredientRepository;
 import com.example.buensabor.Services.IngredientService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -53,6 +55,11 @@ public class IngredientServiceImpl extends BaseServiceImpl<Ingredient,Long> impl
         }
 
         return resultado;
+    }
+
+    @Override
+    public List<Ingredient> getByNameAndState(String name, String state) {
+        return ingredientRepository.getByNameAndState(name,state);
     }
 
     @Override

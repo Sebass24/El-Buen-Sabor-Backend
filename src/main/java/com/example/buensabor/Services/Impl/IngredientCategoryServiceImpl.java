@@ -2,6 +2,7 @@ package com.example.buensabor.Services.Impl;
 
 import com.example.buensabor.Exceptions.RepositoryException;
 import com.example.buensabor.Models.Entity.IngredientCategory;
+import com.example.buensabor.Models.Entity.Product;
 import com.example.buensabor.Repositories.IngredientCategoryRepository;
 import com.example.buensabor.Services.IngredientCategoryService;
 import org.springframework.boot.web.servlet.server.Session;
@@ -22,5 +23,9 @@ public class IngredientCategoryServiceImpl extends BaseServiceImpl<IngredientCat
     @Override
     public List<IngredientCategory> getCategoryChildren(Long categoryId) throws RepositoryException{
         return ingredientCategoryRepository.getChildren(categoryId);
+    }
+    @Override
+    public List<IngredientCategory> getByName(String name) {
+        return ingredientCategoryRepository.getByName(name);
     }
 }

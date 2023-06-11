@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.stream.Collectors;
 
 @RestController
@@ -62,6 +63,36 @@ public class UserController extends BaseControllerImpl<User, UserServiceImpl>{
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
         }
     }
+    @GetMapping("getTop5UsersActual")
+    public ResponseEntity<?> getTop5Users(@RequestParam int limit,@RequestParam String orderBy){
+        try {
+            if (orderBy.equals("orders")){
+                 return ResponseEntity.status(HttpStatus.OK).body(service.getTop5UsersOrders(limit));
+            }
+            if (orderBy.equals("price")){
+                return ResponseEntity.status(HttpStatus.OK).body(service.getTop5UsersPrice(limit));
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"el order by no es ni orden ni precio. Por favor intente luego\"}");
 
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
+        }
+    }
+    @GetMapping("getTopUsersByOrderDateRange")
+    public ResponseEntity<?> getTopUsersByOrderDateRange(@RequestParam Date startDate,@RequestParam Date endDate, @RequestParam int limit,@RequestParam String orderBy){
+        try {
+            if (orderBy.equals("price")){
+                return ResponseEntity.status(HttpStatus.OK).body(service.getUsersWithMostPrice(startDate,endDate,limit));
+            }
+            if (orderBy.equals("orders")) {
+                return ResponseEntity.status(HttpStatus.OK).body(service.getUsersWithMostOrders(startDate,endDate,limit));
+            }
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"el order by no es ni orden ni precio. Por favor intente luego\"}");
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
+        }
+    }
 
 }

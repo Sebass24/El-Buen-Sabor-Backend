@@ -8,6 +8,8 @@ import com.example.buensabor.Services.PaymentMethodService;
 import com.example.buensabor.Services.ProductCategoryService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProductCategoryServiceImpl extends BaseServiceImpl<ProductCategory,Long> implements ProductCategoryService {
 
@@ -16,6 +18,10 @@ public class ProductCategoryServiceImpl extends BaseServiceImpl<ProductCategory,
     public ProductCategoryServiceImpl(ProductCategoryRepository productCategoryRepository) {
         super(productCategoryRepository);
         this.productCategoryRepository = productCategoryRepository;
+    }
+    @Override
+    public List<ProductCategory> getByName(String name) {
+        return productCategoryRepository.getByName(name);
     }
 
 }
