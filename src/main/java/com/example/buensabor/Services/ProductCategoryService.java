@@ -2,6 +2,8 @@ package com.example.buensabor.Services;
 
 import com.example.buensabor.Models.FixedEntities.ProductCategory;
 
-public interface ProductCategoryService extends BaseService<ProductCategory,Long> {
+import java.util.List;
 
+public interface ProductCategoryService extends BaseService<ProductCategory,Long> {
+    public List<ProductCategory> getByName(String name);
 }

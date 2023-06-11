@@ -25,4 +25,14 @@ public class IngredientCategoryController extends BaseControllerImpl<IngredientC
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
         }
     }
+
+    @GetMapping("/name/{name}")
+    public ResponseEntity<?> getByName(@PathVariable String name){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.getByName(name));
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
+        }
+    }
 }

@@ -130,6 +130,10 @@ public class OrderServiceImpl extends BaseServiceImpl<Order,Long> implements Ord
     public List<Order> getByStatus(String status) {
         return orderRepository.getOrdersByStatus(status);
     }
+    @Override
+    public List<Order> getByStatusAndName(String status,Long id) {
+        return orderRepository.getOrdersByStatusAndId(status, id);
+    }
 
     @Override
     public Double getCost(Order order) {

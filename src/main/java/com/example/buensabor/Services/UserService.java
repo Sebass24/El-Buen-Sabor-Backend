@@ -4,6 +4,7 @@ import com.example.buensabor.Models.Entity.Address;
 import com.example.buensabor.Models.Entity.Phone;
 import com.example.buensabor.Models.Entity.User;
 
+import java.util.Date;
 import java.util.List;
 
 public interface UserService extends BaseService<User,Long> {
@@ -11,4 +12,9 @@ public interface UserService extends BaseService<User,Long> {
     //int getEdad(Long id);
     List<Address> getUserAddresses(Long userId);
     List<Phone> getUserPhones(Long userId);
+
+    List<Object>getTop5UsersOrders(int limit);
+    List<Object>getTop5UsersPrice(int limit);
+    List<Object>getUsersWithMostOrders(Date startDate, Date endDate, int Limit);
+    List<Object>getUsersWithMostPrice(Date startDate, Date endDate, int Limit);
 }

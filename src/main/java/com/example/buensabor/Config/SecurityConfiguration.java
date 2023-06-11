@@ -44,7 +44,6 @@ public class SecurityConfiguration {
                 .requestMatchers("/**").permitAll()
                 .and().cors().configurationSource(corsConfigurationSource())
                 .and().csrf().disable().oauth2ResourceServer().jwt();
-        http.csrf().disable();
         return http.build();
     }
 

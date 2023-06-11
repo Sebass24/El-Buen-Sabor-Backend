@@ -3,9 +3,12 @@ package com.example.buensabor.Controllers;
 
 import com.example.buensabor.Models.Entity.Product;
 import com.example.buensabor.Services.Impl.ProductServiceImpl;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 @RestController
 @CrossOrigin("*")
@@ -51,6 +54,15 @@ public class ProductController extends BaseControllerImpl<Product, ProductServic
     public ResponseEntity<?> getRandom(@PathVariable int quantity){
         try {
             return ResponseEntity.status(HttpStatus.OK).body(service.getRandom(quantity));
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
+        }
+    }
+    @GetMapping("/topProducts/{category}")
+    public ResponseEntity<?> getTopProducts(@PathVariable String category, @RequestParam(required = false)@DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate, @RequestParam(required = false)@DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.getTopProducts(category,startDate,endDate));
         }
         catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");

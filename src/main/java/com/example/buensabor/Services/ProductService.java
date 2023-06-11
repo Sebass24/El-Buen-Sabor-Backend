@@ -23,4 +23,6 @@ public interface ProductService extends BaseService<Product,Long> {
     public List<Product> getBestSellersFromToByCategory(int top, ProductCategory category, Date from, Date to);
     public void updatePrices();
     public List<Product> getRandom(int quantity);
+    public List<Object> getTopProducts(String category, Date startDate, Date endDate);
+
 }
