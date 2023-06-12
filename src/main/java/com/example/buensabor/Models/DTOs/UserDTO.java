@@ -11,7 +11,7 @@ public record UserDTO(
         Role role,
         String name,
         String lastName,
-        List<Address> addresses,
-        List<Phone> phones
+        List<AddressDTO> addresses,
+        List<PhoneDTO> phones
 ) {
 }

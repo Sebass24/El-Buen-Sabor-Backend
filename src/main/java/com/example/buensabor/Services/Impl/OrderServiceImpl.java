@@ -1,9 +1,9 @@
 package com.example.buensabor.Services.Impl;
 
 import com.example.buensabor.Exceptions.ServiceException;
+import com.example.buensabor.Models.Entity.Bill;
 import com.example.buensabor.Models.Entity.Order;
 import com.example.buensabor.Models.Entity.OrderDetail;
-import com.example.buensabor.Models.Entity.Product;
 import com.example.buensabor.Models.Entity.ProductDetail;
 import com.example.buensabor.Repositories.OrderRepository;
 import com.example.buensabor.Services.OrderService;
@@ -22,14 +22,16 @@ public class OrderServiceImpl extends BaseServiceImpl<Order,Long> implements Ord
     private ProductServiceImpl productService;
     private IngredientServiceImpl ingredientService;
     private OrderStatusServiceImpl orderStatusService;
+    private BillServiceImpl billService;
 
-    public OrderServiceImpl(OrderRepository orderRepository, OrderDetailServiceImpl orderDetailService, ProductServiceImpl productService, IngredientServiceImpl ingredientService, OrderStatusServiceImpl orderStatusService) {
+    public OrderServiceImpl(OrderRepository orderRepository, OrderDetailServiceImpl orderDetailService, ProductServiceImpl productService, IngredientServiceImpl ingredientService, OrderStatusServiceImpl orderStatusService, BillServiceImpl billService) {
         super(orderRepository);
         this.orderRepository = orderRepository;
         this.orderDetailService = orderDetailService;
         this.productService = productService;
         this.ingredientService = ingredientService;
         this.orderStatusService = orderStatusService;
+        this.billService = billService;
     }
 
     @Override
@@ -160,6 +162,17 @@ public class OrderServiceImpl extends BaseServiceImpl<Order,Long> implements Ord
             income += orderDetailService.getOrderDetailPrice(orderDetail);
         }
         return  income;
+    }
+
+    @Override
+    public void setOrderPaid(Order order) {
+        order.setPaid(true);
+        try {
+            Bill bill = new Bill(order.getId(), order, false);
+            billService.save(bill);
+        }catch (Exception e){
+            System.out.println("Error al guardar la factura");
+        }
     }
 
 }
