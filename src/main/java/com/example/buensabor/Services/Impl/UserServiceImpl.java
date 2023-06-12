@@ -68,5 +68,10 @@ public class UserServiceImpl extends BaseServiceImpl<User,Long> implements UserS
         return users;
     }
 
+    @Override
+    public User getUserByAuth0Id(String id) {
+        return userRepository.getUserByAuth0Id(id);
+    }
+
 
 }

@@ -43,4 +43,6 @@ public interface UserRepository extends BaseRepository<User,Long> {
             "ORDER BY price desc ")
     List<Object> getUsersWithMostPrice(@Param("startDate") Date startDate,
                                         @Param("endDate") Date endDate, Pageable pageable);
+
+    User getUserByAuth0Id (String id);
 }

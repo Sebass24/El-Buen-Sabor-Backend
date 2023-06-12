@@ -25,6 +25,9 @@ public class User extends Base {
     private String name;
     private String lastName;
 
+    @Column(name = "auth0_id")
+    private String auth0Id;
+
 //    @OneToMany(mappedBy = "user")
 //    private Set<Address> addresses;
 //

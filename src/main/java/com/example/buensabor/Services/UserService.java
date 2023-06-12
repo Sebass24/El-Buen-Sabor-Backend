@@ -17,4 +17,5 @@ public interface UserService extends BaseService<User,Long> {
     List<Object>getTop5UsersPrice(int limit);
     List<Object>getUsersWithMostOrders(Date startDate, Date endDate, int Limit);
     List<Object>getUsersWithMostPrice(Date startDate, Date endDate, int Limit);
+    User getUserByAuth0Id(String id);
 }
