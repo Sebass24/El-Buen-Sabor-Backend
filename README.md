@@ -20,6 +20,9 @@ El Buen Sabor es un local de comida rápida ubicado en Mendoza cuya especialidad
 
 # Getting Started
 
+### Swagger documentation --> http://localhost:8080/swagger-ui/index.html
+### or http://{deploy url}/swagger-ui/index.html
+
 ## API Reference Documentation
 
 
