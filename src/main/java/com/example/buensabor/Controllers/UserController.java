@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.stream.Collectors;
 
 @RestController
@@ -89,6 +90,21 @@ public class UserController extends BaseControllerImpl<User, UserServiceImpl>{
                 return ResponseEntity.status(HttpStatus.OK).body(service.getUsersWithMostOrders(startDate,endDate,limit));
             }
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"el order by no es ni orden ni precio. Por favor intente luego\"}");
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
+        }
+    }
+
+    @GetMapping("auth0/{id}")
+    public ResponseEntity<?> getUserByAuth0Id(@PathVariable String id){
+        try {
+            User user = service.getUserByAuth0Id(id);
+            if (user != null) {
+                return ResponseEntity.status(HttpStatus.OK).body(user);
+            } else {
+                return ResponseEntity.status(HttpStatus.OK).body(new User());
+            }
         }
         catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
