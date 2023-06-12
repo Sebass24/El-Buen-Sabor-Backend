@@ -43,4 +43,5 @@ public class Order extends Base{
 
     private Double total;
     private Double discount;
+
 }
