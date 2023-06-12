@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name="user")
@@ -24,10 +25,10 @@ public class User extends Base {
     private String name;
     private String lastName;
 
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-//    private List<Address> addresses;
+//    @OneToMany(mappedBy = "user")
+//    private Set<Address> addresses;
 //
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
-//    private List<Phone> phones;
+//    @OneToMany(mappedBy = "user")
+//    private Set<Phone> phones;
 
 }

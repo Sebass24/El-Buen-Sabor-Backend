@@ -19,7 +19,6 @@ public class Phone extends Base{
     private String number;
 
     @ManyToOne
-    @JsonIgnore
     private User user;
 
 }

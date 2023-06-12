@@ -1,15 +1,20 @@
 package com.example.buensabor.Controllers;
 
-
+import java.io.ByteArrayOutputStream;
 import com.example.buensabor.Models.Entity.Bill;
 import com.example.buensabor.Services.Email.MailService;
 import com.example.buensabor.Services.Impl.BillServiceImpl;
 import org.springframework.format.annotation.DateTimeFormat;
+import com.example.buensabor.Services.PdfService.BillGenerator;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+
+import java.io.IOException;
 
 @RestController
 @CrossOrigin("*")
@@ -52,4 +57,26 @@ public class BillController extends BaseControllerImpl<Bill, BillServiceImpl>{
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
         }
     }
+//    @GetMapping("testbill")
+//    public ResponseEntity<?> createBill(){
+//        try {
+//            billGeneratorService.GenerateBill();
+//            return ResponseEntity.status(HttpStatus.OK).body("{\"mensaje\":\"imagen generada\"}");
+//        }
+//        catch (Exception e){
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
+//        }
+//    }
+//
+//    @GetMapping("/download-bill")
+//    public ResponseEntity<byte[]> descargarPDF(HttpServletResponse response) throws IOException {
+//        ByteArrayOutputStream baos = billGeneratorService.GenerateDownloadableBill();
+//
+//        // Configurar encabezados de respuesta
+//        response.setContentType(MediaType.APPLICATION_PDF_VALUE);
+//        response.setHeader("Content-Disposition", "attachment; filename=archivo.pdf");
+//        response.setContentLength(baos.size());
+//
+//        return ResponseEntity.ok().body(baos.toByteArray());
+//    }
 }
