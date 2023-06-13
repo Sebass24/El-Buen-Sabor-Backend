@@ -2,6 +2,7 @@ package com.example.buensabor.Controllers;
 
 
 import com.example.buensabor.Models.Entity.User;
+import com.example.buensabor.Services.Impl.Auth0Service;
 import com.example.buensabor.Services.Impl.UserServiceImpl;
 import com.example.buensabor.Services.Mappers.UserMapper;
 import org.springframework.http.HttpStatus;
@@ -9,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.stream.Collectors;
 
 @RestController
@@ -18,9 +18,11 @@ import java.util.stream.Collectors;
 public class UserController extends BaseControllerImpl<User, UserServiceImpl>{
 
     private UserMapper userMapper;
-    public UserController(UserServiceImpl service, UserMapper userMapper) {
+    private Auth0Service auth0Service;
+    public UserController(UserServiceImpl service, UserMapper userMapper, Auth0Service auth0Service) {
         super(service);
         this.userMapper = userMapper;
+        this.auth0Service = auth0Service;
     }
 
     @Override
@@ -39,6 +41,50 @@ public class UserController extends BaseControllerImpl<User, UserServiceImpl>{
     public ResponseEntity<?> getAll(){
         try {
             return ResponseEntity.status(HttpStatus.OK).body(service.findAll());
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
+        }
+    }
+
+    @Override
+    @PostMapping("")
+    public ResponseEntity<?> save(@RequestBody User entity){
+        try {
+            if(entity.getRole() != null)
+                auth0Service.assignRoleToUser(entity.getAuth0Id(),entity.getRole().getAuth0RoleId());
+
+            return ResponseEntity.status(HttpStatus.OK).body(service.save(entity));
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
+        }
+    }
+
+    @PostMapping("/createEmployee")
+    public ResponseEntity<?> createAsAdmin(@RequestBody User entity){
+        try {
+
+            if(entity != null)
+                entity = auth0Service.createAuth0User(entity);
+
+            return ResponseEntity.status(HttpStatus.OK).body(service.save(entity));
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
+        }
+    }
+
+    @DeleteMapping("/deleteEmployee/{id}")
+    public ResponseEntity<?> deleteAsAdmin(@PathVariable String id){
+        try {
+            User user = service.getUserByAuth0Id(id);
+            if (user != null) {
+                service.delete(user.getId());
+                auth0Service.deleteAuth0User(id);
+            }else
+                throw new Exception("No existe el usuario");
+            return ResponseEntity.status(HttpStatus.OK).body("{\"mensaje\":\"Eliminado Correctamente\"}");
         }
         catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
