@@ -113,13 +113,16 @@ public class OrderServiceImpl extends BaseServiceImpl<Order,Long> implements Ord
     @Override
     public void changeStatus(Long orderId, Long newOrderStatusId) {
         try{
-            Optional<Order> order = orderRepository.findById(orderId);
-            OrderStatus orderStatus = orderStatusService.findById(newOrderStatusId);
-            if(orderStatus.getDescription().equalsIgnoreCase("En concina") && order.isPresent())
-                decrementIngredientStock(order.get());
+            Order order = orderRepository.findById(orderId).get();
+            if (order.getOrderStatus().getId() == newOrderStatusId)
+                return;
 
-            order.get().setOrderStatus(orderStatus);
-            orderRepository.save(order.get());
+            OrderStatus orderStatus = orderStatusService.findById(newOrderStatusId);
+            if(orderStatus.getId() == 2)
+                decrementIngredientStock(order);
+
+            order.setOrderStatus(orderStatus);
+            orderRepository.save(order);
 
             //if (order.get().getOrderStatus().getDescription().equalsIgnoreCase("Cancelado")){
                 //incrementIngredientStock(order.get());

@@ -36,4 +36,14 @@ public class OrderController extends BaseControllerImpl<Order, OrderServiceImpl>
         }
     }
 
+    @PutMapping("changeStatus/{orderId}/{statusId}")
+    public ResponseEntity<?> updateOrderStatus(@PathVariable Long orderId, @PathVariable Long statusId){
+        try {
+            service.changeStatus(orderId,statusId);
+            return ResponseEntity.status(HttpStatus.OK).body("{\"mesage\":\"Estado actualizado\"}");
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
+        }
+    }
 }
