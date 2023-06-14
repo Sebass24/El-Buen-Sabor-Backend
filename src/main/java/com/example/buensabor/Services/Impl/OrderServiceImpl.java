@@ -1,10 +1,8 @@
 package com.example.buensabor.Services.Impl;
 
 import com.example.buensabor.Exceptions.ServiceException;
-import com.example.buensabor.Models.Entity.Bill;
-import com.example.buensabor.Models.Entity.Order;
-import com.example.buensabor.Models.Entity.OrderDetail;
-import com.example.buensabor.Models.Entity.ProductDetail;
+import com.example.buensabor.Models.Entity.*;
+import com.example.buensabor.Models.FixedEntities.OrderStatus;
 import com.example.buensabor.Repositories.OrderRepository;
 import com.example.buensabor.Services.OrderService;
 import org.springframework.stereotype.Service;
@@ -73,7 +71,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order,Long> implements Ord
         try{
             for (OrderDetail orderDetail : order.getOrderDetails())
             {
-                for (ProductDetail productDetail : orderDetail.getProduct().getProductDetails())
+                Product product = productService.findById(orderDetail.getProduct().getId());
+                for (ProductDetail productDetail : product.getProductDetails())
                 {
                     ingredientService.decrementStock(
                             productDetail.getIngredient().getId(),
@@ -83,7 +82,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order,Long> implements Ord
                 }
             }
         }catch (Exception e){
-
+            System.out.println("Error al decrementar stock");
         }
 
     }
@@ -116,15 +115,20 @@ public class OrderServiceImpl extends BaseServiceImpl<Order,Long> implements Ord
     public void changeStatus(Long orderId, Long newOrderStatusId) {
         try{
             Optional<Order> order = orderRepository.findById(orderId);
-            order.get().setOrderStatus(orderStatusService.findById(newOrderStatusId));
+            OrderStatus orderStatus = orderStatusService.findById(newOrderStatusId);
+            if(orderStatus.getDescription().equalsIgnoreCase("En concina") && order.isPresent())
+                decrementIngredientStock(order.get());
+
+            order.get().setOrderStatus(orderStatus);
             orderRepository.save(order.get());
 
-            if (order.get().getOrderStatus().getDescription().equalsIgnoreCase("Cancelado")){
-                incrementIngredientStock(order.get());
-            }
+            //if (order.get().getOrderStatus().getDescription().equalsIgnoreCase("Cancelado")){
+                //incrementIngredientStock(order.get());
+                //Evaluando si esto tiene sentido o no.
+            //}
         }
         catch (Exception e){
-
+            System.out.println("Error al cambiar estado de orden");
         }
     }
 
