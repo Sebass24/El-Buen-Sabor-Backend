@@ -73,5 +73,12 @@ public class UserServiceImpl extends BaseServiceImpl<User,Long> implements UserS
         return userRepository.getUserByAuth0Id(id);
     }
 
-
+    @Override
+    public List<User> getEmpleoyees(String rol, String name) {
+        return userRepository.getEmpleoyees( rol,  name);
+    }
+    @Override
+    public List<User> getClients(String name) {
+        return userRepository.getClients(name);
+    }
 }

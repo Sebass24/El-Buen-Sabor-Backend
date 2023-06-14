@@ -45,4 +45,12 @@ public interface UserRepository extends BaseRepository<User,Long> {
                                         @Param("endDate") Date endDate, Pageable pageable);
 
     User getUserByAuth0Id (String id);
+
+    @Query("SELECT u from User u where u.role.id != 2  " +
+            "AND (:rol IS NULL OR u.role.description = :rol)" +
+            " AND (:name IS NULL OR u.name like %:name%)")
+    List<User> getEmpleoyees(@Param("rol") String rol,@Param("name")String name);
+    @Query("SELECT u from User u where u.id = 2 AND (:name IS NULL OR u.name like %:name%)")
+    List<User> getClients(@Param("name")String name);
+
 }
