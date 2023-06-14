@@ -27,7 +27,7 @@ public class Order extends Base{
     @OneToOne
     private OrderStatus orderStatus;
 
-    private Calendar estimatedTime;
+    private Date estimatedTime;
 
     @OneToOne
     private PaymentMethod paymentMethod;
@@ -43,5 +43,7 @@ public class Order extends Base{
 
     private Double total;
     private Double discount;
+    private String address;
+    private String phone;
 
 }
