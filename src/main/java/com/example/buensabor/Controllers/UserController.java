@@ -157,4 +157,23 @@ public class UserController extends BaseControllerImpl<User, UserServiceImpl>{
         }
     }
 
+    @GetMapping("/Empleoyees")
+    public ResponseEntity<?> getAllEmpleoyees(@RequestParam(required = false)String rol, @RequestParam(required = false)String name ){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.getEmpleoyees(rol,name));
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
+        }
+    }
+    @GetMapping("/Clients")
+    public ResponseEntity<?> getAllClients(@RequestParam(required = false)String name){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.getClients(name));
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
+        }
+    }
+
 }
