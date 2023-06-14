@@ -36,7 +36,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order,Long> implements Ord
     @Transactional
     public Order save(Order entity) throws ServiceException {
         try {
-            decrementIngredientStock(entity);
             List<OrderDetail> od = entity.getOrderDetails();
 
             od.forEach(orderDetail -> orderDetail.setOrder(entity));
