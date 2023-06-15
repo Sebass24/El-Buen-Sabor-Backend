@@ -1,12 +1,14 @@
 package com.example.buensabor.Services.Impl;
 
 import com.example.buensabor.Models.Entity.Bill;
+import com.example.buensabor.Models.Entity.Order;
 import com.example.buensabor.Repositories.BillRepository;
 import com.example.buensabor.Services.BillService;
 import com.example.buensabor.Services.PdfService.BillGenerator;
-import com.itextpdf.text.DocumentException;
 import org.springframework.stereotype.Service;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.util.Date;
 import java.util.List;
 
@@ -21,39 +23,45 @@ public class BillServiceImpl extends BaseServiceImpl<Bill,Long> implements BillS
     }
 
     @Override
-    public String generateBill(Bill bill) {
+    public ByteArrayOutputStream generateBillByOrderId(long id) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            Bill bill = billRepository.findByOrderId(id);
+            Order order = bill.getOrder();
 
+            bill=null;
+            //create the billing
+            BillGenerator b = new BillGenerator();
 
-        //create the billing
-        BillGenerator b = new BillGenerator();
+            //Set the billing title
+            b.SetBillingHeaderTitle("Factura Buen Sabor");
 
-        //Set the billing title
-        b.SetBillingHeaderTitle("My Billing");
+    //      Set the billing logo
+            String logoPath = new File("").getAbsolutePath() + "/src/main/resources/Imges/logo/BuenSaborLogo.jpeg";
+            b.SetBillingLogoFilename(logoPath);
+            b.SetBillingLogoResizeMethod(BillGenerator.LOGO_RESIZE_METHOD.Percent);
+            b.SetBillingLogoScalingPercent(50);
 
-        //Set the billing logo
-        b.SetBillingLogoFilename("/path/to/logo/image");
-        b.SetBillingLogoResizeMethod(BillGenerator.LOGO_RESIZE_METHOD.Percent);
-        b.SetBillingLogoScalingPercent(50);
+            //Add entries to billing
+            b.SetDiscount(String.valueOf(order.getDiscount()));
+            order.getOrderDetails().forEach(orderDetail ->
+                    b.AddBillingEntry(orderDetail.getProduct().getName(),
+                            String.valueOf(orderDetail.getQuantity()),
+                            String.valueOf(orderDetail.getProduct().getSellPrice())));
 
-        //Add entries to billing
-        b.AddBillingEntry("2015-3-25", "Canon PowerShot SX520", "1", "199$");
-        b.AddBillingEntry("2015-2-1", "Samsung Galaxy S6", "1", "299$");
-        b.AddBillingEntry("2015-2-1", "Fender Mini Tone Master", "1", "34$");
-        b.AddBillingEntry("2014-12-20", "Sennheiser HD 598 Over-Ear Headphones", "1", "149$");
-        b.AddBillingEntry("2015-12-17", "Samsung 850 EVO 250GB", "1", "106$");
+            //Set the customer data
 
-        //Set the customer data
-        b.SetCustomerEmail("my.self@the_mail.com");
-        b.SetCustomerName("John Doe");
-        b.SetBillingIdentifier("126438");
+            b.SetCustomerEmail(order.getUser().getUserEmail());
+            b.SetCustomerName(order.getUser().getName() + " " +order.getUser().getLastName());
+            b.SetBillingIdentifier("Order_" + order.getId());
 
-        //Generate the billing
-        try
-        {
-            b.GenerateDocument();
-        } catch (DocumentException ex) { }
+            //Generate the billing
+            baos = b.GenerateDocument();
 
-        return null;
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return baos;
     }
 
     @Override
@@ -64,4 +72,5 @@ public class BillServiceImpl extends BaseServiceImpl<Bill,Long> implements BillS
     public List<Object> getBillingStatisticsRevenue(Date startDate, Date endDate) {
         return billRepository.getBillingStatistics(startDate,endDate);
     }
+
 }

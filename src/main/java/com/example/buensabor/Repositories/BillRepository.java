@@ -33,4 +33,7 @@ public interface BillRepository extends BaseRepository<Bill,Long> {
         List<Object> getBillingStatistics (@Param("startDate") Date startDate,
                                     @Param("endDate") Date endDate);
 
+        @Query("SELECT b FROM Bill b WHERE b.order.id = :orderId")
+        Bill findByOrderId(@Param("orderId") Long orderId);
+
 }

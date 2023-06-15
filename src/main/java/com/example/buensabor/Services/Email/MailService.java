@@ -8,6 +8,7 @@ import com.sendgrid.helpers.mail.objects.Email;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -24,6 +25,15 @@ public class MailService {
         sendEmail("emichiofalo@gmail.com","Hola","Hola Carola!..... CARA DE PISTOLAAAA!!!",null);
     }
 
+    public void sendBill(String to){
+        String content = "Gracias por su compra!! \n"+
+                "Le adjuntamos su factura";
+        String subject = "[Buen Sabor] Factura";
+        String attachmentPath = new File("").getAbsolutePath() + "/src/main/resources/Temp/" + "factura.pdf";
+
+        sendEmail(to,subject,content,attachmentPath);
+    }
+
     public void sendEmail(String to, String subject, String content, String attachmentPath) {
         Email from = new Email(sender);
         Email toEmail = new Email(to);
@@ -36,8 +46,8 @@ public class MailService {
         try {
             if (attachmentPath != null) {
                 Attachments attachments = new Attachments();
-                attachments.setFilename("attachment.txt"); //ejemplo aca iria pdf el o el formato de la factura
-                attachments.setType("text/plain");
+                attachments.setFilename("factura.pdf");
+                attachments.setType("application/pdf");
                 attachments.setDisposition("attachment");
                 attachments.setContent(Base64.getEncoder().encodeToString(Files.readAllBytes(Paths.get(attachmentPath))));
                 mail.addAttachments(attachments);

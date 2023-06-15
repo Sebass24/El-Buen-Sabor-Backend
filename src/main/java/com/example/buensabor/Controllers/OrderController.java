@@ -26,6 +26,7 @@ public class OrderController extends BaseControllerImpl<Order, OrderServiceImpl>
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
         }
     }
+
     @GetMapping("byStatusAndID")
     public ResponseEntity<?> getByStatusAndId(@RequestParam String status,@RequestParam Long id){
         try {
@@ -41,6 +42,17 @@ public class OrderController extends BaseControllerImpl<Order, OrderServiceImpl>
         try {
             service.changeStatus(orderId,statusId);
             return ResponseEntity.status(HttpStatus.OK).body("{\"mesage\":\"Estado actualizado\"}");
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
+        }
+    }
+
+    @GetMapping("paiOrder/{orderId}")
+    public ResponseEntity<?> setOrderPaid(@PathVariable Long orderId){
+        try {
+            service.setOrderPaid(orderId);
+            return ResponseEntity.status(HttpStatus.OK).body("{\"mesage\":\"Orden pagada, y factura enviada por mail\"}");
         }
         catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");

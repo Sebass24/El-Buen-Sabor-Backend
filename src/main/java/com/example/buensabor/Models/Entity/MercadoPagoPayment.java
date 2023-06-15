@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MercadoPagoPayment extends Base{
-    private long paymentId;
+    private String paymentId;
 
     @OneToOne
     @JoinColumn(name = "order_id")
