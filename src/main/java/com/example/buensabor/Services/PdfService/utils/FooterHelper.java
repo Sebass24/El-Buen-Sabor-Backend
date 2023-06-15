@@ -15,7 +15,7 @@ public class FooterHelper extends PdfPageEventHelper {
     public void onEndPage(PdfWriter writer, Document document)
     {
         Rectangle rect = writer.getBoxSize("billing_doc");
-        Phrase footer_phrase = new Phrase("My Company (c), 2015", PdfBillConfig.SUBTITLE_FONT);
+        Phrase footer_phrase = new Phrase("FES (c), 2023", PdfBillConfig.SUBTITLE_FONT);
 
         ColumnText.showTextAligned(writer.getDirectContent(),
                 Element.ALIGN_CENTER,

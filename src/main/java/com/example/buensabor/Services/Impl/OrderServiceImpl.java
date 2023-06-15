@@ -4,13 +4,14 @@ import com.example.buensabor.Exceptions.ServiceException;
 import com.example.buensabor.Models.Entity.*;
 import com.example.buensabor.Models.FixedEntities.OrderStatus;
 import com.example.buensabor.Repositories.OrderRepository;
+import com.example.buensabor.Services.Email.MailService;
 import com.example.buensabor.Services.OrderService;
+import com.example.buensabor.Util.Util;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class OrderServiceImpl extends BaseServiceImpl<Order,Long> implements OrderService {
@@ -21,8 +22,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order,Long> implements Ord
     private IngredientServiceImpl ingredientService;
     private OrderStatusServiceImpl orderStatusService;
     private BillServiceImpl billService;
+    private MailService mailService;
 
-    public OrderServiceImpl(OrderRepository orderRepository, OrderDetailServiceImpl orderDetailService, ProductServiceImpl productService, IngredientServiceImpl ingredientService, OrderStatusServiceImpl orderStatusService, BillServiceImpl billService) {
+    public OrderServiceImpl(OrderRepository orderRepository, OrderDetailServiceImpl orderDetailService, ProductServiceImpl productService, IngredientServiceImpl ingredientService, OrderStatusServiceImpl orderStatusService, BillServiceImpl billService, MailService mailService) {
         super(orderRepository);
         this.orderRepository = orderRepository;
         this.orderDetailService = orderDetailService;
@@ -30,6 +32,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order,Long> implements Ord
         this.ingredientService = ingredientService;
         this.orderStatusService = orderStatusService;
         this.billService = billService;
+        this.mailService = mailService;
     }
 
     @Override
@@ -171,13 +174,19 @@ public class OrderServiceImpl extends BaseServiceImpl<Order,Long> implements Ord
     }
 
     @Override
-    public void setOrderPaid(Order order) {
+    public void setOrderPaid(Long orderId) {
+        Order order = orderRepository.findById(orderId).get();
         order.setPaid(true);
+        String userEmail = order.getUser().getUserEmail();
         try {
             Bill bill = new Bill(order.getId(), order, false);
             billService.save(bill);
+            billService.generateBillByOrderId(order.getId());
+            mailService.sendBill(userEmail);
         }catch (Exception e){
             System.out.println("Error al guardar la factura");
+        }finally {
+            Util.deleteTemp();
         }
     }
 

@@ -8,10 +8,15 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import java.io.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static com.fasterxml.jackson.databind.type.LogicalType.DateTime;
 
 public class BillGenerator {
 
@@ -22,6 +27,7 @@ public class BillGenerator {
     private String customer_email;
     private String customer_name;
     private String billing_id;
+    private String discount;
 
     public enum LOGO_RESIZE_METHOD
     {
@@ -45,7 +51,7 @@ public class BillGenerator {
         billing_data = new ArrayList<>();
         logo_resize_method = LOGO_RESIZE_METHOD.Percent;
         logo_scaling_percent_value = 100;
-        billing_header_title = "Billing";
+        //billing_header_title = "Billing";
 
         try
         {
@@ -65,27 +71,35 @@ public class BillGenerator {
     /**
      * Populate the billing.
      */
-    public void GenerateDocument() throws DocumentException
+    public ByteArrayOutputStream GenerateDocument() throws DocumentException
     {
-        document.open();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try {
+            PdfWriter.getInstance(document, baos);
 
-        document.add(createHeaderParagragh());
-        document.add(Chunk.NEWLINE);
-        document.add(createUserInformationParagraph());
-        document.add(createBillingBodyParagraph());
+            document.open();
 
-        document.close();
+            document.add(createHeaderParagragh());
+            document.add(Chunk.NEWLINE);
+            document.add(createUserInformationParagraph());
+            document.add(createBillingBodyParagraph());
+
+            document.close();
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return baos;
     }
 
     /**
      * Add a record to the billing
      *
      */
-    public void AddBillingEntry(String date, String article, String quantity, String price)
+    public void AddBillingEntry(String article, String quantity, String price)
     {
         billing_data.add(new String[]
                 {
-                        date, article, quantity, price
+                        article, quantity, price
                 });
     }
 
@@ -114,6 +128,11 @@ public class BillGenerator {
     public void SetBillingIdentifier(String billing_id)
     {
         this.billing_id = billing_id;
+    }
+
+    public void SetDiscount(String discount)
+    {
+        this.discount = discount;
     }
 
     /**
@@ -166,7 +185,7 @@ public class BillGenerator {
     private Paragraph createHeaderParagragh()
     {
         Paragraph header_paragraph = new Paragraph();
-        PdfPTable header_table = new PdfPTable(2);
+        PdfPTable header_table = new PdfPTable(1);
 
         //set the table width
         header_table.setWidthPercentage(100);
@@ -174,13 +193,13 @@ public class BillGenerator {
         //add the logo cell to the header table
         if (!logo_fname.isEmpty())
         {
-            header_table.addCell(getBillingLogoCell());
+            header_table.addCell(getBillingLogoCell()).setHorizontalAlignment(Element.ALIGN_CENTER);
         }
 
         //Set the header billing text
         PdfPCell text_cell = new PdfPCell(new Phrase(this.billing_header_title, PdfBillConfig.TITLE_FONT));
         text_cell.setBorder(0);
-        text_cell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        text_cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         header_table.addCell(text_cell);
 
         //Add the table to the header paragraph
@@ -272,12 +291,20 @@ public class BillGenerator {
     private Phrase getBillingIdentifierPhrase()
     {
         Phrase billing_phrase = new Phrase();
+        LocalDate fechaHoy = LocalDate.now();
+        DateTimeFormatter formatoCorto = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String fechaCorto = fechaHoy.format(formatoCorto);
 
         Chunk billing = new Chunk("Billing:   ", PdfBillConfig.TABLE_CONTENT_FONT_1);
         Chunk id = new Chunk(this.billing_id, PdfBillConfig.TABLE_CONTENT_FONT_2);
 
+        Chunk date = new Chunk("\nDate:   ", PdfBillConfig.TABLE_CONTENT_FONT_1);
+        Chunk now = new Chunk(fechaCorto, PdfBillConfig.TABLE_CONTENT_FONT_2);
+
         billing_phrase.add(billing);
         billing_phrase.add(id);
+        billing_phrase.add(date);
+        billing_phrase.add(now);
 
         return billing_phrase;
     }
@@ -307,9 +334,14 @@ public class BillGenerator {
     {
         Phrase phrase = new Phrase();
 
-        Chunk init = new Chunk("Total price\n", PdfBillConfig.TABLE_CONTENT_FONT_1);
+        Chunk discount = new Chunk("Discount\n", PdfBillConfig.TABLE_CONTENT_FONT_1);
+        Chunk total_discount = new Chunk(this.discount, PdfBillConfig.TABLE_CONTENT_FONT_2);
+
+        Chunk init = new Chunk("\nTotal price\n", PdfBillConfig.TABLE_CONTENT_FONT_1);
         Chunk total_price = new Chunk(calculateTotalBillingPrice(), PdfBillConfig.TABLE_CONTENT_FONT_2);
 
+        phrase.add(discount);
+        phrase.add(total_discount);
         phrase.add(init);
         phrase.add(total_price);
 
@@ -324,19 +356,19 @@ public class BillGenerator {
     {
         Paragraph main_paragraph = new Paragraph("");
         main_paragraph.setSpacingAfter(100);
-        PdfPTable table = new PdfPTable(4);
+        PdfPTable table = new PdfPTable(3);
         table.setWidthPercentage(100);
         table.setSplitLate(false);
         table.setHeaderRows(2);
         table.getDefaultCell().setBackgroundColor(BaseColor.LIGHT_GRAY);
         //add the header row
-        PdfTableUtility.AddRowToTable(table, new Phrase("Date", PdfBillConfig.TABLE_HEADER_FONT),
+        PdfTableUtility.AddRowToTable(table,
                 new Phrase("Article", PdfBillConfig.TABLE_HEADER_FONT),
                 new Phrase("Quantity", PdfBillConfig.TABLE_HEADER_FONT),
                 new Phrase("Unit price", PdfBillConfig.TABLE_HEADER_FONT));
 
         //add the footer row containing the total price information
-        PdfTableUtility.AddEmptyCellToTable(table);
+
         PdfTableUtility.AddEmptyCellToTable(table);
         PdfTableUtility.AddEmptyCellToTable(table);
         PdfTableUtility.AddCellToTable(table, getTotalBillingPricePhrase());
@@ -346,7 +378,7 @@ public class BillGenerator {
         //fill the billing tables with user data
         for (String[] data : billing_data)
         {
-            PdfTableUtility.AddRowToTable(table, data[0], data[1], data[2], data[3]);
+            PdfTableUtility.AddRowToTable(table, data[0], data[1], data[2]);
         }
 
         main_paragraph.add(Chunk.createWhitespace(""));
@@ -367,14 +399,16 @@ public class BillGenerator {
 
         for (String[] data : billing_data)
         {
-            String priceStr = data[3];
+            String priceStr = data[2];
+            String quantity = data[1];
             if (priceStr.endsWith("$"))
             {
                 priceStr = priceStr.substring(0, priceStr.length() - 1);
             }
 
-            total_price += Float.parseFloat(priceStr);
+            total_price += Float.parseFloat(priceStr) * Float.parseFloat(quantity);
         }
+        total_price -= Float.parseFloat(this.discount);
         total_price_str = String.format("%d" + PdfBillConfig.CURRENCY_SYMBOL, total_price);
 
         return total_price_str;
