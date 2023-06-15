@@ -47,6 +47,19 @@ public class UserController extends BaseControllerImpl<User, UserServiceImpl>{
         }
     }
 
+    @PutMapping("")
+    public ResponseEntity<?> update(@RequestBody User entity){
+        try {
+            if(entity.getRole().getAuth0RoleId() != null && entity.getAuth0Id() != null)
+                auth0Service.assignRoleToUser(entity.getAuth0Id(),entity.getRole().getAuth0RoleId());
+
+            return ResponseEntity.status(HttpStatus.OK).body(service.update(entity));
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
+        }
+    }
+
     @Override
     @PostMapping("")
     public ResponseEntity<?> save(@RequestBody User entity){
