@@ -179,10 +179,13 @@ public class OrderServiceImpl extends BaseServiceImpl<Order,Long> implements Ord
         order.setPaid(true);
         String userEmail = order.getUser().getUserEmail();
         try {
-            Bill bill = new Bill(order.getId(), order, false);
-            billService.save(bill);
-            billService.generateBillByOrderId(order.getId());
-            mailService.sendBill(userEmail);
+            if (billService.validateNonDuplicateBill(orderId)){
+                Bill bill = new Bill(order.getId(), order, false);
+                billService.save(bill);
+                orderRepository.save(order);
+                billService.generateBillByOrderId(order.getId());
+                mailService.sendBill(userEmail);
+            }
         }catch (Exception e){
             System.out.println("Error al guardar la factura");
         }finally {

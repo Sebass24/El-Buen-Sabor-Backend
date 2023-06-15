@@ -73,4 +73,13 @@ public class BillServiceImpl extends BaseServiceImpl<Bill,Long> implements BillS
         return billRepository.getBillingStatistics(startDate,endDate);
     }
 
+    public boolean validateNonDuplicateBill(long orderId){
+        Bill bill = billRepository.findByOrderId(orderId);
+
+        if (bill == null){
+            return true;
+        }else
+            return false;
+    }
+
 }
