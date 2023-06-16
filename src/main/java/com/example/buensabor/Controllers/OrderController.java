@@ -48,7 +48,7 @@ public class OrderController extends BaseControllerImpl<Order, OrderServiceImpl>
         }
     }
 
-    @GetMapping("paiOrder/{orderId}")
+    @PutMapping("paiOrder/{orderId}")
     public ResponseEntity<?> setOrderPaid(@PathVariable Long orderId){
         try {
             service.setOrderPaid(orderId);
