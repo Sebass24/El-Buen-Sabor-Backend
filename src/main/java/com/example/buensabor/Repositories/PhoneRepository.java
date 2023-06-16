@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface PhoneRepository extends BaseRepository<Phone,Long> {
 
-    @Query("select p from Phone p where p.user.id = :id")
+    @Query("select p from Phone p where p.user.id = :id and p.deleted = false ")
     List<Phone> getPhonesByUser(@Param("id") Long id);
 
 }
