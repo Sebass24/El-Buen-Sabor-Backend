@@ -40,9 +40,9 @@ public class ProductServiceImpl extends BaseServiceImpl<Product,Long> implements
         try {
             List<ProductDetail> pd = entity.getProductDetails();
             pd.forEach(productDetail -> productDetail.setProduct(entity));
-            entity.setImage(null);
+            entity.setImage(null);//Hay q modificarlo cuando podamos cargar bien la imagen.
             Recipe recipe = entity.getRecipe();
-
+            entity.setSellPrice(getProductSellPrice(entity));
             if(recipe != null){
                 recipeService.save(recipe);
                 entity.setRecipe(recipe);
