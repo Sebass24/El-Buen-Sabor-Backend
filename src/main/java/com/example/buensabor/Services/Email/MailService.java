@@ -1,5 +1,6 @@
 package com.example.buensabor.Services.Email;
 
+import com.example.buensabor.Models.Entity.Review;
 import com.sendgrid.*;
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Attachments;
@@ -65,4 +66,31 @@ public class MailService {
             ex.printStackTrace();
         }
     }
+
+    public String sendReview(Review review){
+        String subject = review.getName() + " envio una reseña";
+        String content = review.getEmail() +" \n " +review.getMessage();
+        sendMailReview(subject,content);
+        return "el mail fue enviado con exito";
+    }
+    public void sendMailReview( String subject, String content) {
+        Email from = new Email(sender);
+        Email toEmail = new Email(sender);
+        Content messageContent = new Content("text/plain", content);
+        Mail mail = new Mail(from, subject, toEmail, messageContent);
+
+        SendGrid sg = new SendGrid(sendGridApiKey);
+        Request request = new Request();
+
+        try {
+            request.setMethod(Method.POST);
+            request.setEndpoint("mail/send");
+            request.setBody(mail.build());
+
+            Response response = sg.api(request);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
 }
