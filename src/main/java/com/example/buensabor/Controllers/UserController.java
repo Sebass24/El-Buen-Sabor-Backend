@@ -1,7 +1,9 @@
 package com.example.buensabor.Controllers;
 
 
+import com.example.buensabor.Models.Entity.Review;
 import com.example.buensabor.Models.Entity.User;
+import com.example.buensabor.Services.Email.MailService;
 import com.example.buensabor.Services.Impl.Auth0Service;
 import com.example.buensabor.Services.Impl.UserServiceImpl;
 import com.example.buensabor.Services.Mappers.UserMapper;
@@ -19,10 +21,12 @@ public class UserController extends BaseControllerImpl<User, UserServiceImpl>{
 
     private UserMapper userMapper;
     private Auth0Service auth0Service;
-    public UserController(UserServiceImpl service, UserMapper userMapper, Auth0Service auth0Service) {
+    private MailService mailService;
+    public UserController(UserServiceImpl service, UserMapper userMapper, Auth0Service auth0Service,MailService mailService) {
         super(service);
         this.userMapper = userMapper;
         this.auth0Service = auth0Service;
+        this.mailService = mailService;
     }
 
     @Override
@@ -189,4 +193,13 @@ public class UserController extends BaseControllerImpl<User, UserServiceImpl>{
         }
     }
 
+    @GetMapping("/sendReview")
+    public ResponseEntity<?> sendReview(@RequestBody Review entity){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(mailService.sendReview(entity));
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
+        }
+    }
 }
