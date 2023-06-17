@@ -10,8 +10,14 @@ import com.example.buensabor.Util.Util;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl extends BaseServiceImpl<Order,Long> implements OrderService {
@@ -42,7 +48,19 @@ public class OrderServiceImpl extends BaseServiceImpl<Order,Long> implements Ord
             List<OrderDetail> od = entity.getOrderDetails();
 
             od.forEach(orderDetail -> orderDetail.setOrder(entity));
-            entity.setDate(new Date());
+            Date now = new Date();
+            entity.setDate(now);
+
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(now);
+
+            int minutesToAdd = calculateEstimatedTime(entity);
+            calendar.add(Calendar.MINUTE, minutesToAdd);
+            Date estimatedTime = calendar.getTime();
+
+            entity.setEstimatedTime(estimatedTime);
+
             Order order = baseRepository.save(entity);
             return order;
 
@@ -191,6 +209,35 @@ public class OrderServiceImpl extends BaseServiceImpl<Order,Long> implements Ord
         }finally {
             Util.deleteTemp();
         }
+    }
+
+    public int calculateEstimatedTime(Order order){
+        long orderCookingTime = 0;
+
+        for (OrderDetail od : order.getOrderDetails()) {
+            orderCookingTime += od.getProduct().getCookingTime();
+        }
+
+        List<Order> ordersAtKitchen = orderRepository.getOrdersByStatus("En cocina");
+
+        List<Date> estimatedTimes = ordersAtKitchen.stream().map(Order::getEstimatedTime).collect(Collectors.toList());
+        Date maxDate = Collections.max(estimatedTimes);
+        Date now = new Date();
+
+        LocalDateTime localDateTime1 = maxDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+        LocalDateTime localDateTime2 = now.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+        Duration duration = Duration.between(localDateTime1, localDateTime2);
+        long minutosDiferencia = duration.toMinutes();
+
+        orderCookingTime += minutosDiferencia;
+
+        return (int) orderCookingTime + 10;
+//Del tiempo estimado de cada uno de los artículos pedidos por el cliente se elige el mayor
+//+
+//De los pedidos que se encuentran en cocina, el artículo con el mayor tiempo estimado
+//+
+//10 minutos de entrega por delivery (solo si el cliente eligió dicha opción).
     }
 
 }
