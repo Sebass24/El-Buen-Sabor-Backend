@@ -219,19 +219,19 @@ public class OrderServiceImpl extends BaseServiceImpl<Order,Long> implements Ord
         }
 
         List<Order> ordersAtKitchen = orderRepository.getOrdersByStatus("En cocina");
+        if (!ordersAtKitchen.isEmpty()) {
+            List<Date> estimatedTimes = ordersAtKitchen.stream().map(Order::getEstimatedTime).collect(Collectors.toList());
+            Date maxDate = Collections.max(estimatedTimes);
+            Date now = new Date();
 
-        List<Date> estimatedTimes = ordersAtKitchen.stream().map(Order::getEstimatedTime).collect(Collectors.toList());
-        Date maxDate = Collections.max(estimatedTimes);
-        Date now = new Date();
+            LocalDateTime localDateTime1 = maxDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+            LocalDateTime localDateTime2 = now.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
 
-        LocalDateTime localDateTime1 = maxDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
-        LocalDateTime localDateTime2 = now.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+            Duration duration = Duration.between(localDateTime2, localDateTime1);
+            long minutosDiferencia = duration.toMinutes();
 
-        Duration duration = Duration.between(localDateTime1, localDateTime2);
-        long minutosDiferencia = duration.toMinutes();
-
-        orderCookingTime += minutosDiferencia;
-
+            orderCookingTime += minutosDiferencia;
+        }
         return (int) orderCookingTime + 10;
 //Del tiempo estimado de cada uno de los artículos pedidos por el cliente se elige el mayor
 //+
