@@ -42,7 +42,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order,Long> implements Ord
             List<OrderDetail> od = entity.getOrderDetails();
 
             od.forEach(orderDetail -> orderDetail.setOrder(entity));
-
+            entity.setDate(new Date());
             Order order = baseRepository.save(entity);
             return order;
 
