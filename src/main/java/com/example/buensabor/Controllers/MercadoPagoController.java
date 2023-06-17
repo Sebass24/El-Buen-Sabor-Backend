@@ -1,12 +1,14 @@
 package com.example.buensabor.Controllers;
 
 
+import com.example.buensabor.Models.MercadoPago.MpItem;
 import com.mercadopago.client.preference.PreferenceClient;
 import com.mercadopago.client.preference.PreferenceItemRequest;
 import com.mercadopago.client.preference.PreferenceRequest;
 import com.mercadopago.client.preference.PreferenceTrackRequest;
 import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
+import com.mercadopago.resources.preference.Preference;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -23,17 +25,17 @@ import java.util.List;
     public class MercadoPagoController {
 
         @GetMapping("/createAndRedirect")
-        public void createAndRedirect() throws MPException, MPApiException, InterruptedException {
+        public String createAndRedirect(@RequestBody MpItem mpItem) throws MPException, MPApiException, InterruptedException {
             PreferenceClient client = new PreferenceClient();
 
             List<PreferenceItemRequest> items = new ArrayList<>();
             PreferenceItemRequest item =
                     PreferenceItemRequest.builder()
-                            .title("Dummy Title")
-                            .description("Dummy description")
+                            .title(mpItem.getTitle())
+                            .description(mpItem.getDescription())
                             .quantity(1)
                             .currencyId("ARS")
-                            .unitPrice(new BigDecimal("10"))
+                            .unitPrice(new BigDecimal(mpItem.getPrice()))
                             .build();
             items.add(item);
 
@@ -44,7 +46,9 @@ import java.util.List;
 
             PreferenceRequest request = PreferenceRequest.builder().items(items).build();
 
-            client.create(request);
+            Preference p = client.create(request);
+            String prefId = p.getId();
+            return prefId;
         }
 
         @GetMapping("/generic")

@@ -1,6 +1,7 @@
 package com.example.buensabor.Services.Impl;
 
 import com.example.buensabor.Exceptions.ServiceException;
+import com.example.buensabor.Models.Entity.Image;
 import com.example.buensabor.Models.Entity.Product;
 import com.example.buensabor.Models.Entity.ProductDetail;
 import com.example.buensabor.Models.Entity.Recipe;
@@ -10,6 +11,7 @@ import com.example.buensabor.Services.ProductService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,26 +23,28 @@ public class ProductServiceImpl extends BaseServiceImpl<Product,Long> implements
     private OrderDetailServiceImpl orderDetailService;
     private ProductDetailServiceImpl productDetailService;
     private RecipeServiceImpl recipeService;
+    private ImageServiceImpl imageService;
 
 
     @Value("${product.profit}")
     private String profit;
 
-    public ProductServiceImpl(ProductRepository productRepository, OrderDetailServiceImpl orderDetailService, ProductDetailServiceImpl productDetailService, RecipeServiceImpl recipeService) {
+    public ProductServiceImpl(ProductRepository productRepository, OrderDetailServiceImpl orderDetailService, ProductDetailServiceImpl productDetailService, RecipeServiceImpl recipeService, ImageServiceImpl imageService) {
         super(productRepository);
         this.productRepository = productRepository;
         this.orderDetailService = orderDetailService;
         this.productDetailService = productDetailService;
         this.recipeService = recipeService;
+        this.imageService = imageService;
     }
 
-    @Override
     @Transactional
-    public Product save(Product entity) throws ServiceException {
+    public Product save(Product entity, MultipartFile image) throws ServiceException {
         try {
+            Image img = imageService.save(image);
             List<ProductDetail> pd = entity.getProductDetails();
             pd.forEach(productDetail -> productDetail.setProduct(entity));
-            entity.setImage(null);//Hay q modificarlo cuando podamos cargar bien la imagen.
+            entity.setImage(img);
             Recipe recipe = entity.getRecipe();
             entity.setSellPrice(getProductSellPrice(entity));
             if(recipe != null){
