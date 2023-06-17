@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Date;
 
@@ -19,6 +20,15 @@ public class ProductController extends BaseControllerImpl<Product, ProductServic
         super(service);
     }
 
+    @PostMapping("/save")
+    public ResponseEntity<?> save(@RequestPart("Product") Product entity,@RequestPart("Image") MultipartFile[] multipartFile){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.save(entity));
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
+        }
+    }
 
     @GetMapping("/category/{category}")
     public ResponseEntity<?> getByCategory(@PathVariable String category){
