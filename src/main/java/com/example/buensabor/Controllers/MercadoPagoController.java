@@ -10,6 +10,8 @@ import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
 import com.mercadopago.resources.preference.Preference;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
@@ -24,13 +26,15 @@ import java.util.List;
 
     public class MercadoPagoController {
 
-        @GetMapping("/createAndRedirect")
-        public String createAndRedirect(@RequestBody MpItem mpItem) throws MPException, MPApiException, InterruptedException {
+        @PostMapping("/createAndRedirect")
+        public ResponseEntity<?> createAndRedirect(@RequestBody MpItem mpItem) throws MPException, MPApiException, InterruptedException {
             PreferenceClient client = new PreferenceClient();
 
             List<PreferenceItemRequest> items = new ArrayList<>();
+
             PreferenceItemRequest item =
                     PreferenceItemRequest.builder()
+                            .id(mpItem.getCode())
                             .title(mpItem.getTitle())
                             .description(mpItem.getDescription())
                             .quantity(1)
@@ -47,8 +51,10 @@ import java.util.List;
             PreferenceRequest request = PreferenceRequest.builder().items(items).build();
 
             Preference p = client.create(request);
+
             String prefId = p.getId();
-            return prefId;
+
+            return ResponseEntity.status(HttpStatus.OK).body("{\"preferenceId\":\""+prefId+"\"}");
         }
 
         @GetMapping("/generic")
