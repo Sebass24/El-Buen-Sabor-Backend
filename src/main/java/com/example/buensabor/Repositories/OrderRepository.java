@@ -22,7 +22,7 @@ public interface OrderRepository extends BaseRepository<Order,Long> {
     @Query("select o from Order o where o.orderStatus.description = :status or :status = '' and o.id = :id")
     List<Order> getOrdersByStatusAndId(@Param("status") String status, @Param("id") Long id);
 
-    @Query("select o from Order o where o.user.id = :id")
+    @Query("select o from Order o where o.user.id = :id order by o.date desc")
     List<Order> getOrdersByUser(@Param("id") Long id);
 
 
