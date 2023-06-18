@@ -233,11 +233,15 @@ public class OrderServiceImpl extends BaseServiceImpl<Order,Long> implements Ord
             orderCookingTime += minutosDiferencia;
         }
         return (int) orderCookingTime + 10;
-//Del tiempo estimado de cada uno de los artículos pedidos por el cliente se elige el mayor
-//+
-//De los pedidos que se encuentran en cocina, el artículo con el mayor tiempo estimado
-//+
-//10 minutos de entrega por delivery (solo si el cliente eligió dicha opción).
+    }
+
+    public List<Order> getOrdersByUserId(Long id){
+        try{
+            return orderRepository.getOrdersByUser(id);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return null;
     }
 
 }

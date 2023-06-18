@@ -37,6 +37,16 @@ public class OrderController extends BaseControllerImpl<Order, OrderServiceImpl>
         }
     }
 
+    @GetMapping("byUserID/{id}")
+    public ResponseEntity<?> getByUserId(@PathVariable Long id){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.getOrdersByUserId(id));
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
+        }
+    }
+
     @PutMapping("changeStatus/{orderId}/{statusId}")
     public ResponseEntity<?> updateOrderStatus(@PathVariable Long orderId, @PathVariable Long statusId){
         try {
