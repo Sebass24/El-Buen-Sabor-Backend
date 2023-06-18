@@ -202,4 +202,15 @@ public class UserController extends BaseControllerImpl<User, UserServiceImpl>{
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
         }
     }
+
+    @PatchMapping ("/update-password")
+    public ResponseEntity<?> updatePassword(@RequestBody User entity){
+        try {
+            auth0Service.changePassword(entity);
+            return ResponseEntity.status(HttpStatus.OK).body("{\"message\":\"Contraseña actualizada correctamente\"}");
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. no se pudo actualizar la contraseña\"}");
+        }
+    }
 }

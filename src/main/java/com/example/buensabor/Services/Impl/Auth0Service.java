@@ -5,6 +5,7 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
@@ -103,7 +104,6 @@ public class Auth0Service {
 
             // Assign the role to the user using the Management API
 
-
             HttpPost userCreationRequest = new HttpPost(managementApiUrl + "/api/v2/users");
             userCreationRequest.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
             userCreationRequest.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
@@ -135,6 +135,35 @@ public class Auth0Service {
 
         } catch (Exception e) {
             System.err.println("Error creating user: " + e.getMessage());
+            throw e;
+        }
+    }
+
+    public User changePassword(User user) throws Exception {
+        try {
+            // Get an access token to authenticate with the Management API
+            HttpClient httpClient = HttpClients.createDefault();
+            String accessToken = this.GetAccessToken();
+
+            String userId = user.getAuth0Id();
+            userId = userId.replace("|", "%7C");
+
+            HttpPatch userCreationRequest = new HttpPatch(managementApiUrl + "/api/v2/users/"+userId);
+            userCreationRequest.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+            userCreationRequest.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
+            StringEntity roleAssignmentRequestBody = new StringEntity(
+                    "{" +
+                            "\"connection\": \"" + "Username-Password-Authentication" + "\"," +
+                            "\"password\": \"" + user.getPassword() + "\"" +
+                            "}");
+            userCreationRequest.setEntity(roleAssignmentRequestBody);
+            String userResponse = EntityUtils.toString(httpClient.execute(userCreationRequest).getEntity());
+
+            return user;
+
+
+        } catch (Exception e) {
+            System.err.println("Error updating password: " + e.getMessage());
             throw e;
         }
     }
