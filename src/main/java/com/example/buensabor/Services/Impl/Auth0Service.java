@@ -5,11 +5,13 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -120,7 +122,7 @@ public class Auth0Service {
             String auth0UserId = (new JSONObject(userResponse)).getString("user_id");
             user.setAuth0Id(auth0UserId);
 
-            assignRoleToUser(user.getRole().getAuth0RoleId(), auth0UserId);
+            assignRoleToUser(auth0UserId,user.getRole().getAuth0RoleId());
 
             System.out.println("User created successfully");
 
@@ -139,6 +141,26 @@ public class Auth0Service {
         }
     }
 
+    public String getUserConnectionTypeByAuth0Id(String id) throws Exception{
+        // Get an access token to authenticate with the Management API
+        HttpClient httpClient = HttpClients.createDefault();
+        String accessToken = this.GetAccessToken();
+
+
+        id = id.replace("|", "%7C");
+
+        HttpGet userGetRequest = new HttpGet(managementApiUrl + "/api/v2/users/"+id);
+        userGetRequest.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+        userGetRequest.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
+
+        String userResponse = EntityUtils.toString(httpClient.execute(userGetRequest).getEntity());
+        JSONArray auth0Identities = (new JSONObject(userResponse)).getJSONArray("identities");
+        JSONObject first = auth0Identities.getJSONObject(0);
+        String connection = first.getString("connection");
+
+        return connection;
+    }
+
     public User changePassword(User user) throws Exception {
         try {
             // Get an access token to authenticate with the Management API
@@ -147,6 +169,10 @@ public class Auth0Service {
 
             String userId = user.getAuth0Id();
             userId = userId.replace("|", "%7C");
+            String connection = getUserConnectionTypeByAuth0Id(userId);
+
+            if (!connection.equals("Username-Password-Authentication"))
+                throw new Exception("No se puede actualizar la contraseña debido al metodo de autenticación que eligió");
 
             HttpPatch userCreationRequest = new HttpPatch(managementApiUrl + "/api/v2/users/"+userId);
             userCreationRequest.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
@@ -157,10 +183,13 @@ public class Auth0Service {
                             "\"password\": \"" + user.getPassword() + "\"" +
                             "}");
             userCreationRequest.setEntity(roleAssignmentRequestBody);
-            String userResponse = EntityUtils.toString(httpClient.execute(userCreationRequest).getEntity());
+            HttpResponse userResponse = httpClient.execute(userCreationRequest);
+            int statusCode = userResponse.getStatusLine().getStatusCode();
 
-            return user;
-
+            if (statusCode == 200) {
+                return user;
+            } else
+                throw new Exception("Error actualizar contraseña");
 
         } catch (Exception e) {
             System.err.println("Error updating password: " + e.getMessage());
