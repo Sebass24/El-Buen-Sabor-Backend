@@ -2,13 +2,11 @@ package com.example.buensabor.Controllers;
 
 
 import com.example.buensabor.Models.MercadoPago.MpItem;
-import com.mercadopago.client.preference.PreferenceClient;
-import com.mercadopago.client.preference.PreferenceItemRequest;
-import com.mercadopago.client.preference.PreferenceRequest;
-import com.mercadopago.client.preference.PreferenceTrackRequest;
+import com.mercadopago.client.preference.*;
 import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
 import com.mercadopago.resources.preference.Preference;
+import com.mercadopago.resources.preference.PreferenceBackUrls;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,12 +41,14 @@ import java.util.List;
                             .build();
             items.add(item);
 
+
 //            List<PreferenceTrackRequest> tracks = new ArrayList<>();
 //            PreferenceTrackRequest googleTrack = PreferenceTrackRequest.builder().type("google_ad").build();
 //
 //            tracks.add(googleTrack);
-
-            PreferenceRequest request = PreferenceRequest.builder().items(items).build();
+            String url = "http://localhost:8080/api/mercadopago/generic";
+            PreferenceBackUrlsRequest bu = PreferenceBackUrlsRequest.builder().success(url).failure(url).pending(url).build();
+            PreferenceRequest request = PreferenceRequest.builder().items(items).backUrls(bu).build();
 
             Preference p = client.create(request);
 
