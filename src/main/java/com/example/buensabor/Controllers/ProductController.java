@@ -5,6 +5,7 @@ import com.example.buensabor.Models.Entity.Product;
 import com.example.buensabor.Services.Impl.ProductServiceImpl;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,8 +21,8 @@ public class ProductController extends BaseControllerImpl<Product, ProductServic
         super(service);
     }
 
-    @PostMapping("/save")
-    public ResponseEntity<?> save(@RequestPart("Product") Product entity,@RequestPart("Image") MultipartFile[] multipartFile){
+    @PostMapping(value = "/save", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> save(@RequestPart("Product") Product entity,@RequestPart(value = "Image",required = false) MultipartFile multipartFile){
         try {
             return ResponseEntity.status(HttpStatus.OK).body(service.save(entity));
         }
