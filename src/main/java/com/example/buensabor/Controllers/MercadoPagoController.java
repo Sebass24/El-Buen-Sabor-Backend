@@ -66,7 +66,7 @@ import java.util.List;
             PreferenceRequest request = PreferenceRequest.builder()
                     .items(items)
                     .paymentMethods(paymentMethods)
-                    .autoReturn("true")
+                    .autoReturn("approved")
                     .externalReference(mpItem.getCode())
                     .backUrls(bu).build();
 
