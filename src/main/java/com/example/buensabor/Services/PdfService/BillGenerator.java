@@ -97,9 +97,10 @@ public class BillGenerator {
      */
     public void AddBillingEntry(String article, String quantity, String price)
     {
+        String subTotal = String.valueOf(Double.valueOf(quantity) * Double.valueOf(price));
         billing_data.add(new String[]
                 {
-                        article, quantity, price
+                        article, quantity, price,subTotal
                 });
     }
 
@@ -356,19 +357,21 @@ public class BillGenerator {
     {
         Paragraph main_paragraph = new Paragraph("");
         main_paragraph.setSpacingAfter(100);
-        PdfPTable table = new PdfPTable(3);
+        PdfPTable table = new PdfPTable(4);
         table.setWidthPercentage(100);
         table.setSplitLate(false);
         table.setHeaderRows(2);
         table.getDefaultCell().setBackgroundColor(BaseColor.LIGHT_GRAY);
         //add the header row
         PdfTableUtility.AddRowToTable(table,
-                new Phrase("Article", PdfBillConfig.TABLE_HEADER_FONT),
-                new Phrase("Quantity", PdfBillConfig.TABLE_HEADER_FONT),
-                new Phrase("Unit price", PdfBillConfig.TABLE_HEADER_FONT));
+                new Phrase("Articuo", PdfBillConfig.TABLE_HEADER_FONT),
+                new Phrase("Cantidad", PdfBillConfig.TABLE_HEADER_FONT),
+                new Phrase("Precio Unitario", PdfBillConfig.TABLE_HEADER_FONT),
+                new Phrase("Sub Total", PdfBillConfig.TABLE_HEADER_FONT));
 
         //add the footer row containing the total price information
 
+        PdfTableUtility.AddEmptyCellToTable(table);
         PdfTableUtility.AddEmptyCellToTable(table);
         PdfTableUtility.AddEmptyCellToTable(table);
         PdfTableUtility.AddCellToTable(table, getTotalBillingPricePhrase());
@@ -378,7 +381,7 @@ public class BillGenerator {
         //fill the billing tables with user data
         for (String[] data : billing_data)
         {
-            PdfTableUtility.AddRowToTable(table, data[0], data[1], data[2]);
+            PdfTableUtility.AddRowToTable(table, data[0], data[1], data[2],data[3]);
         }
 
         main_paragraph.add(Chunk.createWhitespace(""));
@@ -409,7 +412,7 @@ public class BillGenerator {
             total_price += Float.parseFloat(priceStr) * Float.parseFloat(quantity);
         }
         total_price -= Float.parseFloat(this.discount);
-        total_price_str = String.format("%d" + PdfBillConfig.CURRENCY_SYMBOL, total_price);
+        total_price_str = String.format(PdfBillConfig.CURRENCY_SYMBOL + "%d", total_price);
 
         return total_price_str;
     }
