@@ -90,7 +90,7 @@ import java.util.List;
             attributes.addFlashAttribute("processing_mode",processingMode);
             attributes.addFlashAttribute("merchant_account_id",merchantAccountId);
 
-            return new RedirectView("http://127.0.0.1:5173/myOrders");
+            return new RedirectView("http://127.0.0.1:5173/orderdetail/"+externalReference);
         }
 
     @GetMapping("/failure")
