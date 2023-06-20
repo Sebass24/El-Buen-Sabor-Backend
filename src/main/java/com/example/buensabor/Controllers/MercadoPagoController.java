@@ -1,6 +1,7 @@
 package com.example.buensabor.Controllers;
 
 
+import com.example.buensabor.Models.FixedEntities.PaymentMethod;
 import com.example.buensabor.Models.MercadoPago.MpItem;
 import com.mercadopago.client.preference.*;
 import com.mercadopago.exceptions.MPApiException;
@@ -46,9 +47,15 @@ import java.util.List;
 //            PreferenceTrackRequest googleTrack = PreferenceTrackRequest.builder().type("google_ad").build();
 //
 //            tracks.add(googleTrack);
-            String url = "http://localhost:8080/api/mercadopago/generic";
-            PreferenceBackUrlsRequest bu = PreferenceBackUrlsRequest.builder().success(url).failure(url).pending(url).build();
-            PreferenceRequest request = PreferenceRequest.builder().items(items).backUrls(bu).build();
+
+            String urlSuccess = "http://localhost:8080/api/mercadopago/success";
+            String urlFailure = "http://localhost:8080/api/mercadopago/failure";
+            PreferenceBackUrlsRequest bu = PreferenceBackUrlsRequest.builder().success(urlSuccess).failure(urlFailure).pending(urlFailure).build();
+            PreferenceRequest request = PreferenceRequest.builder()
+                    .items(items)
+                    .externalReference(mpItem.getCode())
+                    .backUrls(bu).build();
+            //PreferenceRequest request = PreferenceRequest.builder().items(items).build();
 
             Preference p = client.create(request);
 
@@ -57,7 +64,7 @@ import java.util.List;
             return ResponseEntity.status(HttpStatus.OK).body("{\"preferenceId\":\""+prefId+"\"}");
         }
 
-        @GetMapping("/generic")
+        @GetMapping("/success")
         public RedirectView success(
                 HttpServletRequest request,
                 @RequestParam("collection_id") String collectionId,
@@ -83,7 +90,38 @@ import java.util.List;
             attributes.addFlashAttribute("processing_mode",processingMode);
             attributes.addFlashAttribute("merchant_account_id",merchantAccountId);
 
-            return new RedirectView("/");
+            return new RedirectView("http://127.0.0.1:5173/myOrders");
         }
+
+    @GetMapping("/failure")
+    public RedirectView failure(
+            HttpServletRequest request,
+            @RequestParam("collection_id") String collectionId,
+            @RequestParam("collection_status") String collectionStatus,
+            @RequestParam("external_reference") String externalReference,
+            @RequestParam("payment_type") String paymentType,
+            @RequestParam("merchant_order_id") String merchantOrderId,
+            @RequestParam("preference_id") String preferenceId,
+            @RequestParam("site_id") String siteId,
+            @RequestParam("processing_mode") String processingMode,
+            @RequestParam("merchant_account_id") String merchantAccountId,
+            RedirectAttributes attributes)
+            throws MPException {
+
+        attributes.addFlashAttribute("genericResponse", true);
+        attributes.addFlashAttribute("collection_id", collectionId);
+        attributes.addFlashAttribute("collection_status", collectionStatus);
+        attributes.addFlashAttribute("external_reference", externalReference);
+        attributes.addFlashAttribute("payment_type", paymentType);
+        attributes.addFlashAttribute("merchant_order_id", merchantOrderId);
+        attributes.addFlashAttribute("preference_id",preferenceId);
+        attributes.addFlashAttribute("site_id",siteId);
+        attributes.addFlashAttribute("processing_mode",processingMode);
+        attributes.addFlashAttribute("merchant_account_id",merchantAccountId);
+
+        return new RedirectView("http://127.0.0.1:5173/cart");
+    }
+
+
 
 }
