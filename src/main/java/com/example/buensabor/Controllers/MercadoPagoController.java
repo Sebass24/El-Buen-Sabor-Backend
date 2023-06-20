@@ -1,8 +1,10 @@
 package com.example.buensabor.Controllers;
 
 
+import com.example.buensabor.Models.Entity.Order;
 import com.example.buensabor.Models.FixedEntities.PaymentMethod;
 import com.example.buensabor.Models.MercadoPago.MpItem;
+import com.example.buensabor.Services.Impl.OrderServiceImpl;
 import com.mercadopago.client.preference.*;
 import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
@@ -17,15 +19,20 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @RestController
 @CrossOrigin("*")
 @RequestMapping(path = "api/mercadopago")
-
     public class MercadoPagoController {
+        private OrderServiceImpl orderService;
 
-        @PostMapping("/createAndRedirect")
+    public MercadoPagoController(OrderServiceImpl orderService) {
+        this.orderService = orderService;
+    }
+
+    @PostMapping("/createAndRedirect")
         public ResponseEntity<?> createAndRedirect(@RequestBody MpItem mpItem) throws MPException, MPApiException, InterruptedException {
             PreferenceClient client = new PreferenceClient();
 
@@ -51,10 +58,21 @@ import java.util.List;
             String urlSuccess = "http://localhost:8080/api/mercadopago/success";
             String urlFailure = "http://localhost:8080/api/mercadopago/failure";
             PreferenceBackUrlsRequest bu = PreferenceBackUrlsRequest.builder().success(urlSuccess).failure(urlFailure).pending(urlFailure).build();
+
+            List<PreferencePaymentTypeRequest> excludedPaymentTypes = new ArrayList<>();
+            excludedPaymentTypes.add(PreferencePaymentTypeRequest.builder().id("ticket").build());
+
+            PreferencePaymentMethodsRequest paymentMethods = PreferencePaymentMethodsRequest.builder()
+                    .excludedPaymentTypes(excludedPaymentTypes)
+                    .installments(1)
+                    .build();
+
             PreferenceRequest request = PreferenceRequest.builder()
                     .items(items)
+                    .paymentMethods(paymentMethods)
                     .externalReference(mpItem.getCode())
                     .backUrls(bu).build();
+
             //PreferenceRequest request = PreferenceRequest.builder().items(items).build();
 
             Preference p = client.create(request);
@@ -90,7 +108,8 @@ import java.util.List;
             attributes.addFlashAttribute("processing_mode",processingMode);
             attributes.addFlashAttribute("merchant_account_id",merchantAccountId);
 
-            return new RedirectView("http://127.0.0.1:5173/orderdetail/"+externalReference);
+            orderService.setOrderPaid(Long.valueOf(externalReference));
+            return new RedirectView("http://127.0.0.1:5173/orderdetail/"+externalReference +"/?success=true");
         }
 
     @GetMapping("/failure")
@@ -119,7 +138,13 @@ import java.util.List;
         attributes.addFlashAttribute("processing_mode",processingMode);
         attributes.addFlashAttribute("merchant_account_id",merchantAccountId);
 
-        return new RedirectView("http://127.0.0.1:5173/cart");
+        try {
+            orderService.delete(Long.valueOf(externalReference));
+        }catch (Exception e){
+            System.out.println("No se pudo eliminar la orden");
+        }
+
+        return new RedirectView("http://127.0.0.1:5173/cart?failure=true");
     }
 
 
