@@ -70,6 +70,7 @@ import java.util.List;
             PreferenceRequest request = PreferenceRequest.builder()
                     .items(items)
                     .paymentMethods(paymentMethods)
+                    .autoReturn("true")
                     .externalReference(mpItem.getCode())
                     .backUrls(bu).build();
 
@@ -109,7 +110,7 @@ import java.util.List;
             attributes.addFlashAttribute("merchant_account_id",merchantAccountId);
 
             orderService.setOrderPaid(Long.valueOf(externalReference));
-            return new RedirectView("http://127.0.0.1:5173/orderdetail/"+externalReference +"/?success=true");
+            return new RedirectView("http://127.0.0.1:5173/orderdetail/"+externalReference +"?success=true");
         }
 
     @GetMapping("/failure")
