@@ -3,8 +3,10 @@ package com.example.buensabor.Controllers;
 
 import com.example.buensabor.Models.Entity.Review;
 import com.example.buensabor.Models.Entity.User;
+import com.example.buensabor.Models.FixedEntities.Role;
 import com.example.buensabor.Services.Email.MailService;
 import com.example.buensabor.Services.Impl.Auth0Service;
+import com.example.buensabor.Services.Impl.RoleServiceImpl;
 import com.example.buensabor.Services.Impl.UserServiceImpl;
 import com.example.buensabor.Services.Mappers.UserMapper;
 import org.springframework.http.HttpStatus;
@@ -22,11 +24,13 @@ public class UserController extends BaseControllerImpl<User, UserServiceImpl>{
     private UserMapper userMapper;
     private Auth0Service auth0Service;
     private MailService mailService;
-    public UserController(UserServiceImpl service, UserMapper userMapper, Auth0Service auth0Service,MailService mailService) {
+    private RoleServiceImpl roleService;
+    public UserController(UserServiceImpl service, UserMapper userMapper, Auth0Service auth0Service, MailService mailService, RoleServiceImpl roleService) {
         super(service);
         this.userMapper = userMapper;
         this.auth0Service = auth0Service;
         this.mailService = mailService;
+        this.roleService = roleService;
     }
 
     @Override
@@ -69,8 +73,12 @@ public class UserController extends BaseControllerImpl<User, UserServiceImpl>{
     @PostMapping("")
     public ResponseEntity<?> save(@RequestBody User entity){
         try {
-            if(entity.getRole() != null)
+            if(entity.getRole() != null){
                 auth0Service.assignRoleToUser(entity.getAuth0Id(),entity.getRole().getAuth0RoleId());
+            }else{
+                Role rolCliente = roleService.findById(Long.valueOf(2));//cliente
+                auth0Service.assignRoleToUser(entity.getAuth0Id(),rolCliente.getAuth0RoleId());
+            }
 
             return ResponseEntity.status(HttpStatus.OK).body(service.save(entity));
         }
