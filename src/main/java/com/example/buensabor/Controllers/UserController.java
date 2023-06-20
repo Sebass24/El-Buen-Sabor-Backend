@@ -77,6 +77,7 @@ public class UserController extends BaseControllerImpl<User, UserServiceImpl>{
                 auth0Service.assignRoleToUser(entity.getAuth0Id(),entity.getRole().getAuth0RoleId());
             }else{
                 Role rolCliente = roleService.findById(Long.valueOf(2));//cliente
+                entity.setRole(rolCliente);
                 auth0Service.assignRoleToUser(entity.getAuth0Id(),rolCliente.getAuth0RoleId());
             }
 
