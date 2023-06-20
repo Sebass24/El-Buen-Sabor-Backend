@@ -3,6 +3,7 @@ import com.example.buensabor.Exceptions.ServiceException;
 import com.example.buensabor.Models.Entity.Image;
 import com.example.buensabor.Repositories.ImageRepository;
 import com.example.buensabor.Services.ImageService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,7 +12,6 @@ import org.springframework.mock.web.MockMultipartFile;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,10 +20,12 @@ import java.util.UUID;
 public class ImageServiceImpl extends BaseServiceImpl<Image,Long> implements ImageService {
 
     private ImageRepository imageRepository;
+    private HttpServletRequest request;
 
-    public ImageServiceImpl(ImageRepository imageRepository) {
+    public ImageServiceImpl(ImageRepository imageRepository, HttpServletRequest request) {
         super(imageRepository);
         this.imageRepository = imageRepository;
+        this.request = request;
     }
 
     @Transactional
@@ -35,11 +37,13 @@ public class ImageServiceImpl extends BaseServiceImpl<Image,Long> implements Ima
 
             // Guardar el archivo en el sistema de archivos
             String fileName = UUID.randomUUID().toString() + "-" + img.getOriginalFilename();
-            String filePath = new File("").getAbsolutePath() + "/src/main/resources/Imges/" + fileName;
+            String filePath = new File("").getAbsolutePath() + "/src/main/resources/static/" + fileName;
             File dest = new File(filePath);
             img.transferTo(dest);
 
-            Image entity = new Image(fileName,filePath,img);
+            String baseUrl = String.format("%s://%s:%d", request.getScheme(), request.getServerName(), request.getServerPort());
+            String serverPath = baseUrl + fileName;
+            Image entity = new Image(fileName,serverPath,img);
             entity = baseRepository.save(entity);
             return entity;
         }catch (Exception e) {

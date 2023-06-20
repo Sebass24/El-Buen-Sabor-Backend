@@ -1,15 +1,12 @@
 package com.example.buensabor.Controllers;
 
 
-import com.example.buensabor.Models.Entity.Order;
-import com.example.buensabor.Models.FixedEntities.PaymentMethod;
 import com.example.buensabor.Models.MercadoPago.MpItem;
 import com.example.buensabor.Services.Impl.OrderServiceImpl;
 import com.mercadopago.client.preference.*;
 import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.exceptions.MPException;
 import com.mercadopago.resources.preference.Preference;
-import com.mercadopago.resources.preference.PreferenceBackUrls;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +16,6 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @RestController
