@@ -42,7 +42,7 @@ public class ImageServiceImpl extends BaseServiceImpl<Image,Long> implements Ima
             img.transferTo(dest);
 
             String baseUrl = String.format("%s://%s:%d", request.getScheme(), request.getServerName(), request.getServerPort());
-            String serverPath = baseUrl + fileName;
+            String serverPath = baseUrl+ "/" + fileName;
             Image entity = new Image(fileName,serverPath,img);
             entity = baseRepository.save(entity);
             return entity;
