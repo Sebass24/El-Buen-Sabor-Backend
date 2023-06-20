@@ -8,6 +8,7 @@ import com.example.buensabor.Models.Entity.Recipe;
 import com.example.buensabor.Models.FixedEntities.ProductCategory;
 import com.example.buensabor.Repositories.ProductRepository;
 import com.example.buensabor.Services.ProductService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,7 +52,6 @@ public class ProductServiceImpl extends BaseServiceImpl<Product,Long> implements
                 recipeService.save(recipe);
                 entity.setRecipe(recipe);
             }
-
 
             Product product = productRepository.save(entity);
             return product;

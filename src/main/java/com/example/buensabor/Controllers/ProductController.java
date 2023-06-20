@@ -2,6 +2,7 @@ package com.example.buensabor.Controllers;
 
 
 import com.example.buensabor.Models.Entity.Product;
+import com.example.buensabor.Services.Impl.ImageServiceImpl;
 import com.example.buensabor.Services.Impl.ProductServiceImpl;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import java.util.Date;
 @CrossOrigin("*")
 @RequestMapping(path = "api/product")
 public class ProductController extends BaseControllerImpl<Product, ProductServiceImpl>{
+    private ImageServiceImpl imageService;
 
     public ProductController(ProductServiceImpl service) {
         super(service);
@@ -24,7 +26,8 @@ public class ProductController extends BaseControllerImpl<Product, ProductServic
     @PostMapping(value = "/save", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> save(@RequestPart("Product") Product entity,@RequestPart(value = "Image",required = false) MultipartFile multipartFile){
         try {
-            return ResponseEntity.status(HttpStatus.OK).body(service.save(entity));
+
+            return ResponseEntity.status(HttpStatus.OK).body(service.save(entity,multipartFile));
         }
         catch (Exception e){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
