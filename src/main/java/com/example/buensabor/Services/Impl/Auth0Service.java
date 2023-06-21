@@ -58,17 +58,18 @@ public class Auth0Service {
             // Assign the role to the user using the Management API
 
             userId = userId.replace("|","%7C");
+            roleId = roleId.replace("\n", "");
             HttpPost roleAssignmentRequest = new HttpPost(managementApiUrl + "/api/v2/users/" + userId + "/roles");
             roleAssignmentRequest.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
             roleAssignmentRequest.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
             StringEntity roleAssignmentRequestBody = new StringEntity("{\"roles\": [\"" + roleId + "\"]}");
             roleAssignmentRequest.setEntity(roleAssignmentRequestBody);
-            httpClient.execute(roleAssignmentRequest);
+            String roleResponse = EntityUtils.toString(httpClient.execute(roleAssignmentRequest).getEntity());
 
             System.out.println("Role assigned successfully");
         } catch (Exception e) {
             System.err.println("Error assigning role: " + e.getMessage());
-            throw e;
+
         }
     }
 
