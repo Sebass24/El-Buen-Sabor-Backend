@@ -1,6 +1,7 @@
 package com.example.buensabor.Services.Impl;
 
 import com.example.buensabor.Models.Entity.User;
+import com.example.buensabor.Services.Email.MailService;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -33,6 +34,12 @@ public class Auth0Service {
     private String clientSecret;
 
     private String managementApiUrl = "https://dev-a6tntsf5lyicxsfn.us.auth0.com";
+
+    private MailService mailService;
+
+    public Auth0Service(MailService mailService) {
+        this.mailService = mailService;
+    }
 
     private String GetAccessToken() throws Exception {
         // Get an access token to authenticate with the Management API
@@ -125,8 +132,9 @@ public class Auth0Service {
 
             assignRoleToUser(auth0UserId,user.getRole().getAuth0RoleId());
 
-            addMetadata(user.getAuth0Id(),user.getRole().getDescription());
+            //addMetadata(user.getAuth0Id(),user.getRole().getDescription());
 
+            mailService.sendPasswordTicket(user);
             System.out.println("User created successfully");
 
             return user;
