@@ -34,7 +34,7 @@ public class ProductController extends BaseControllerImpl<Product, ProductServic
         }
     }
 
-    @PutMapping(value="", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PutMapping(value="/update", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> update(@RequestPart("Product") Product entity,@RequestPart(value = "Image",required = false) MultipartFile multipartFile){
         try {
             if (multipartFile != null){
