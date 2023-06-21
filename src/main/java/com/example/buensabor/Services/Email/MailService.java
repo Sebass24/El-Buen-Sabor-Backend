@@ -23,18 +23,14 @@ public class MailService {
     private String sendGridApiKey;
     @Value("${sendgrid.sender}")
     private String sender;
-    private Auth0Service auth0Service;
 
-    public MailService(Auth0Service auth0Service) {
-        this.auth0Service = auth0Service;
-    }
 
     public void testEmail(){
         sendEmail("emichiofalo@gmail.com","Hola","Hola Carola!..... CARA DE PISTOLAAAA!!!",null);
     }
 
     public void sendBill(String to){
-        String content = "Gracias por su compra!! \n"+
+        String content = "Gracias por su compra!! <br>"+
                 "Le adjuntamos su factura";
         String subject = "[Buen Sabor] Factura";
         String attachmentPath = new File("").getAbsolutePath() + "/src/main/resources/Temp/" + "factura.pdf";
@@ -76,18 +72,13 @@ public class MailService {
 
     public String sendReview(Review review){
         String subject = review.getName() + " envió una reseña";
-        String content = review.getEmail() +" \n " +review.getMessage();
+        String content = review.getEmail() +" <br> " +review.getMessage();
         sendEmail(sender,subject,content,null);
         return "el mail fue enviado con exito";
     }
 
-    public String sendPasswordTicket(User user){
+    public String sendPasswordTicket(String userEmail, String link){
         String subject ="[Buen Sabor] Creación de usuario";
-        String link ="Algo salio mal";
-        try {
-            link = auth0Service.getPasswordChange(user.getAuth0Id());
-        }catch (Exception e){}
-
         String content = "¡Bienvenido al equipo!<br>" +
                 "<br>" +
                 "Hemos creado tu cuenta de empleado del restaurante. <br>" +
@@ -102,7 +93,7 @@ public class MailService {
                 "<br>" +
                 "Saludos,<br>" +
                 "El buen sabor";
-        sendEmail(user.getUserEmail(),subject,content,null);
+        sendEmail(userEmail,subject,content,null);
         return "el mail fue enviado con exito";
     }
 

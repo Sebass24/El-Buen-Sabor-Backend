@@ -134,17 +134,12 @@ public class Auth0Service {
 
             //addMetadata(user.getAuth0Id(),user.getRole().getDescription());
 
-            mailService.sendPasswordTicket(user);
+            String link = getPasswordChange(user.getAuth0Id());
+            mailService.sendPasswordTicket(user.getUserEmail(),link);
+
             System.out.println("User created successfully");
 
             return user;
-
-//            {
-//                "email": "seba.sulia@gmail.com",
-//                    "connection": "Username-Password-Authentication",
-//                    "password": "Secret1234"
-//            } Datos obligatorios para crear usuario
-
 
         } catch (Exception e) {
             System.err.println("Error creating user: " + e.getMessage());
