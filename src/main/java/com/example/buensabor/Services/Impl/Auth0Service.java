@@ -125,6 +125,8 @@ public class Auth0Service {
 
             assignRoleToUser(auth0UserId,user.getRole().getAuth0RoleId());
 
+            addMetadata(user.getAuth0Id(),user.getRole().getDescription());
+
             System.out.println("User created successfully");
 
             return user;
@@ -140,6 +142,32 @@ public class Auth0Service {
             System.err.println("Error creating user: " + e.getMessage());
             throw e;
         }
+    }
+
+    public void addMetadata(String id,String role) throws Exception{
+        // Get an access token to authenticate with the Management API
+        HttpClient httpClient = HttpClients.createDefault();
+        String accessToken = this.GetAccessToken();
+
+
+        //id = id.replace("|", "%7C");
+
+        HttpPatch addMetadataRequest = new HttpPatch(managementApiUrl + "/api/v2/users/" + id);
+        addMetadataRequest.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+        addMetadataRequest.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
+        StringEntity addMetadataRequestBody = new StringEntity(
+                "{\"app_metadata\": {" +
+                        "\"role\": \"" + role +"\""+
+                        "}}");
+        addMetadataRequest.setEntity(addMetadataRequestBody);
+        HttpResponse matadataResponse = httpClient.execute(addMetadataRequest);
+
+        int statusCode = matadataResponse.getStatusLine().getStatusCode();
+
+        if (statusCode != 200) {
+            throw new Exception("Error actualizar usuario");
+        }
+
     }
 
     public String getUserConnectionTypeByAuth0Id(String id) throws Exception{

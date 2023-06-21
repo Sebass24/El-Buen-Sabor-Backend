@@ -244,4 +244,23 @@ public class OrderServiceImpl extends BaseServiceImpl<Order,Long> implements Ord
         return null;
     }
 
+    public void addMinutesToOrder(Long id) throws Exception{
+        Order order = orderRepository.findById(id).get();
+
+        if (order != null) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(order.getEstimatedTime());
+
+            // Sumar 10 minutos
+            calendar.add(Calendar.MINUTE, 10);
+
+            // Obtener la nueva fecha sumada
+            Date addDate = calendar.getTime();
+
+            order.setEstimatedTime(addDate);
+
+            orderRepository.save(order);
+        }else throw new Exception();
+    }
+
 }
