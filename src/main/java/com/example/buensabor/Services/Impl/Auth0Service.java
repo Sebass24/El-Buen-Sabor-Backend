@@ -162,6 +162,29 @@ public class Auth0Service {
         return connection;
     }
 
+    public String getPasswordChange(String id) throws Exception{
+        // Get an access token to authenticate with the Management API
+        HttpClient httpClient = HttpClients.createDefault();
+        String accessToken = this.GetAccessToken();
+
+
+        //id = id.replace("|", "%7C");
+
+        HttpPost changePassRequest = new HttpPost(managementApiUrl + "/api/v2/tickets/password-change");
+        changePassRequest.setHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+        changePassRequest.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
+        StringEntity roleAssignmentRequestBody = new StringEntity(
+                "{\"user_id\": \"" + id + "\"," +
+                        "\"client_id\": \"" + "smzKUEQwvdCTTg9RGvmKj9REsGRfweuK" +"\""+
+                        "}");
+        changePassRequest.setEntity(roleAssignmentRequestBody);
+        String passResponse = EntityUtils.toString(httpClient.execute(changePassRequest).getEntity());
+
+        String ticket = (new JSONObject(passResponse)).getString("ticket");
+
+        return ticket;
+    }
+
     public User changePassword(User user) throws Exception {
         try {
             // Get an access token to authenticate with the Management API
