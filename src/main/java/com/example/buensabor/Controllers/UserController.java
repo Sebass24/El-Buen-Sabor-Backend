@@ -214,12 +214,12 @@ public class UserController extends BaseControllerImpl<User, UserServiceImpl>{
     }
 
     @GetMapping ("/update-password/{id}")
-    public String updatePassword(@PathVariable String id){
+    public ResponseEntity<?> updatePassword(@PathVariable String id){
         try {
-            return auth0Service.getPasswordChange(id);
+            return ResponseEntity.status(HttpStatus.OK).body("{\"ticket\":\""+ auth0Service.getPasswordChange(id) +"\"}");
         }
         catch (Exception e){
-            return e.getMessage();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
         }
     }
 }
