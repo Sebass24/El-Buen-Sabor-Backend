@@ -37,7 +37,7 @@ public class ImageServiceImpl extends BaseServiceImpl<Image,Long> implements Ima
 
             // Guardar el archivo en el sistema de archivos
             String fileName = UUID.randomUUID().toString() + "-" + img.getOriginalFilename();
-            String filePath = new File("").getAbsolutePath() + "/src/main/resources/static/" + fileName;
+            String filePath = fileName;
             File dest = new File(filePath);
             img.transferTo(dest);
 
