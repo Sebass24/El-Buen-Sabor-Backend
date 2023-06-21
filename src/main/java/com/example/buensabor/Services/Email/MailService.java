@@ -102,7 +102,7 @@ public class MailService {
                 "<br>" +
                 "Saludos,<br>" +
                 "El buen sabor";
-        sendEmail(sender,subject,content,null);
+        sendEmail(user.getUserEmail(),subject,content,null);
         return "el mail fue enviado con exito";
     }
 
