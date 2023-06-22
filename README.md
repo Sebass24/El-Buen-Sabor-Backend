@@ -32,7 +32,7 @@ Además en la raíz del proyecto hay un archivo bbdd.sql con los datos iniciales
 
 ###Endpoints
 
-A continuación se enumeran todos los endpoints disponibles en la API.
+A continuación se enumeran los endpoints genericos disponibles en la API.
 
 #### GET /{resource}
 Devuelve una lista de todos los elementos del recurso especificado.
