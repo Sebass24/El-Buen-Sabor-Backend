@@ -1,9 +1,13 @@
 package com.example.buensabor.Services.PdfService.utils;
 
 import com.example.buensabor.Services.PdfService.PdfBillConfig;
+import com.itextpdf.text.Element;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PdfTableUtility {
     /**
