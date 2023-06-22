@@ -16,7 +16,8 @@ public interface IngredientRepository extends BaseRepository<Ingredient,Long> {
    @Query("select i from Ingredient i where i.deleted = false and (i.name like %:name%   " +
             " and ((:estado = 'OPTIMO' AND i.currentStock > i.minimumStock * 1.2)" +
             " or (:estado = 'PEDIR' AND i.currentStock <= i.minimumStock * 1.2 AND i.currentStock > i.minimumStock) " +
-            "or(:estado = 'FALTANTE' AND i.currentStock < i.minimumStock)))")
+            "or(:estado = 'FALTANTE' AND i.currentStock < i.minimumStock)" +
+           "or(:estado='')))")
     List<Ingredient> getByNameAndState(@Param("name") String name,@Param("estado") String estado);
 
 }

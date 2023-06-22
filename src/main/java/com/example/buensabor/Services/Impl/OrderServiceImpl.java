@@ -257,6 +257,23 @@ public class OrderServiceImpl extends BaseServiceImpl<Order,Long> implements Ord
         return null;
     }
 
+    public List<Order> getOrdersByIdDelivery(Long id){
+        try{
+            return orderRepository.getOrdersByIdDelivery(id);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+    public List<Order> getOrdersByIdCook(Long id){
+        try{
+            return orderRepository.getOrdersByIdCook(id);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+
     public void addMinutesToOrder(Long id) throws Exception{
         Order order = orderRepository.findById(id).get();
 

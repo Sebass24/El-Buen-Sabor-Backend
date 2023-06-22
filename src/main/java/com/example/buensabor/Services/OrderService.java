@@ -17,6 +17,8 @@ public interface OrderService extends BaseService<Order,Long> {
     public Double getGain(Order order);
     public Double getIncome(Order order);
     public List<Order> getByStatusAndName(String status, Long id);
+    public List<Order> getOrdersByIdDelivery( Long id);
+    public List<Order> getOrdersByIdCook( Long id);
     public void setOrderPaid(Long orderId);
 
 }

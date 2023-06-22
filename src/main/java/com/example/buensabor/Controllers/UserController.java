@@ -102,7 +102,7 @@ public class UserController extends BaseControllerImpl<User, UserServiceImpl>{
         }
     }
 
-    @DeleteMapping("/deleteEmployee/{id}")
+    @DeleteMapping("deleteEmployee/{id}")
     public ResponseEntity<?> deleteAsAdmin(@PathVariable String id){
         try {
             User user = service.getUserByAuth0Id(id);

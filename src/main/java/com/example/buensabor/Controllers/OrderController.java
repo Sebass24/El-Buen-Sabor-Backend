@@ -36,7 +36,24 @@ public class OrderController extends BaseControllerImpl<Order, OrderServiceImpl>
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
         }
     }
-
+    @GetMapping("byIDDelivery")
+    public ResponseEntity<?> byIDDelivery(@RequestParam Long id){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.getOrdersByIdDelivery(id));
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
+        }
+    }
+    @GetMapping("byIDCook")
+    public ResponseEntity<?> byIDCook(@RequestParam Long id){
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(service.getOrdersByIdCook(id));
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("{\"error\":\"Error. Por favor intente luego\"}");
+        }
+    }
     @GetMapping("byUserID/{id}")
     public ResponseEntity<?> getByUserId(@PathVariable Long id){
         try {
