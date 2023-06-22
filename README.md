@@ -23,9 +23,9 @@ El Buen Sabor es un local de comida rápida ubicado en Mendoza cuya especialidad
 ### Swagger documentation --> http://localhost:8080/swagger-ui/index.html
 ### or http://{deploy url}/swagger-ui/index.html
 
-Para levantar la api asegurarse de que el string de conección a la base de datos en el archivo application.properties sea jdbc:mysql://containers-us-west-44.railway.app:5539/rest_generica usuario root y contraseña 93qB579IRr2la1F1xWFS para usar la base de datos en la nube, o configurar una en local.
+Para levantar la api asegurarse de que el string de conección a la base de datos sea jdbc:mysql://containers-us-west-44.railway.app:5539, usuario root y contraseña 93qB579IRr2la1F1xWFS para usar la base de datos en la nube, o configurar una en local. Esto de debe configurar en src/main/application.properties
 
-Además en la raiz del proyecto hay un archivo bbdd.sql con los datos iniciales en el caso de crear su propia base de datos.
+Además en la raíz del proyecto hay un archivo bbdd.sql con los datos iniciales en el caso de crear su propia base de datos. Para esto, solo crear la base de datos con nombre “rest_generica”, correr el backend (creará las tablas) y ejecutar las queries del archivo bbdd.sql.
 
 ## API Reference Documentation
 
