@@ -66,6 +66,9 @@ public class ProductServiceImpl extends BaseServiceImpl<Product,Long> implements
             if (entity.getId() == null) {
                 throw new ServiceException("La entidad a modificar debe contener un Id.");
             }
+            if (entity.getImage() != null){
+                imageService.delete(entity.getImage().getId());
+            }
             Image img = imageService.save(image);
             entity.setImage(img);
             List<ProductDetail> pd = entity.getProductDetails();
