@@ -157,10 +157,11 @@ public class OrderServiceImpl extends BaseServiceImpl<Order,Long> implements Ord
             order.setOrderStatus(orderStatus);
             orderRepository.save(order);
 
-            //if (order.get().getOrderStatus().getDescription().equalsIgnoreCase("Cancelado")){
-                //incrementIngredientStock(order.get());
-                //Evaluando si esto tiene sentido o no.
-            //}
+            if (order.getOrderStatus().getDescription().equalsIgnoreCase("Cancelado")){
+                Bill bill = billService.getByOrderId(order.getId());
+                bill.setCancelled(true);
+                billService.save(bill);
+            }
         }
         catch (Exception e){
             System.out.println("Error al cambiar estado de orden");

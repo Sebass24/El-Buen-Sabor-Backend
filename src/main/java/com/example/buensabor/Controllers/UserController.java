@@ -203,7 +203,7 @@ public class UserController extends BaseControllerImpl<User, UserServiceImpl>{
         }
     }
 
-    @GetMapping("/sendReview")
+    @PutMapping("/sendReview")
     public ResponseEntity<?> sendReview(@RequestBody Review entity){
         try {
             return ResponseEntity.status(HttpStatus.OK).body(mailService.sendReview(entity));

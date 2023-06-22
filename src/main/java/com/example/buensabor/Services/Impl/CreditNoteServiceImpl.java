@@ -26,7 +26,7 @@ public class CreditNoteServiceImpl extends BaseServiceImpl<CreditNote,Long> impl
     public ByteArrayOutputStream generateCreditNoteByOrderId(long id) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try {
-            Bill bill = billService.findById(id);
+            Bill bill = billService.getByOrderId(id);
             Order order = bill.getOrder();
 
             if (!bill.isCancelled())

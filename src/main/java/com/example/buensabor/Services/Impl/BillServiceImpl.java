@@ -64,6 +64,9 @@ public class BillServiceImpl extends BaseServiceImpl<Bill,Long> implements BillS
         return baos;
     }
 
+    public Bill getByOrderId(Long id){
+        return billRepository.findByOrderId(id);
+    }
     @Override
     public List<Object> getBillingStatisticsCost(Date startDate, Date endDate) {
         return billRepository.getBillingStatisticsCosts(startDate,endDate);
