@@ -23,6 +23,10 @@ El Buen Sabor es un local de comida rápida ubicado en Mendoza cuya especialidad
 ### Swagger documentation --> http://localhost:8080/swagger-ui/index.html
 ### or http://{deploy url}/swagger-ui/index.html
 
+Para levantar la api asegurarse de que el string de conección a la base de datos sea jdbc:mysql://containers-us-west-44.railway.app:5539 usuario root y contraseña 93qB579IRr2la1F1xWFS para usar la base de datos en la nuve, o configurar una en local.
+
+Además en la raiz del proyecto hay un archivo bbdd.sql con los datos iniciales en el caso de crear su propia base de datos.
+
 ## API Reference Documentation
 
 
@@ -91,4 +95,3 @@ Elimina el elemento con el ID especificado del recurso especificado. Aclaramos q
 
 - Mensaje de eliminación corecta.
 
-### Edpoits especificos por entidad:
