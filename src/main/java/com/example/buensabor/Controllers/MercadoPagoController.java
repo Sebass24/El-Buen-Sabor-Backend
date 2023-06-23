@@ -106,7 +106,7 @@ import java.util.List;
             attributes.addFlashAttribute("merchant_account_id",merchantAccountId);
 
             orderService.setOrderPaid(Long.valueOf(externalReference));
-            return new RedirectView("http://127.0.0.1:5173/orderdetail/"+externalReference +"?success=true");
+            return new RedirectView("https://el-buen-sabor-frontend.vercel.app/orderdetail/"+externalReference +"?success=true");
         }
 
     @GetMapping("/failure")
@@ -141,7 +141,7 @@ import java.util.List;
             System.out.println("No se pudo eliminar la orden");
         }
 
-        return new RedirectView("http://127.0.0.1:5173/cart?failure=true");
+        return new RedirectView("https://el-buen-sabor-frontend.vercel.app/cart?failure=true");
     }
 
 
