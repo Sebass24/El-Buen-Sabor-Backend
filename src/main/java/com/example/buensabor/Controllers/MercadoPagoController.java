@@ -51,8 +51,8 @@ import java.util.List;
 //
 //            tracks.add(googleTrack);
 
-            String urlSuccess = "http://localhost:8080/api/mercadopago/success";
-            String urlFailure = "http://localhost:8080/api/mercadopago/failure";
+            String urlSuccess = "https://psychotic-jelly-production.up.railway.app/api/mercadopago/success";
+            String urlFailure = "https://psychotic-jelly-production.up.railway.app/api/mercadopago/failure";
             PreferenceBackUrlsRequest bu = PreferenceBackUrlsRequest.builder().success(urlSuccess).failure(urlFailure).pending(urlFailure).build();
 
             List<PreferencePaymentTypeRequest> excludedPaymentTypes = new ArrayList<>();
