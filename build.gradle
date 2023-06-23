@@ -42,3 +42,10 @@ jar {
         attributes 'Main-Class': 'com.example.buensabor.BuenSaborV1Application'
     }
 }
+springBoot {
+    mainClass = 'com.example.buensabor.BuenSaborV1Application'
+}
+
+jar {
+    enabled = true
+}
