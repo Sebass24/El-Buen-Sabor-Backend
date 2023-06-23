@@ -108,7 +108,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order,Long> implements Ord
                 {
                     ingredientService.decrementStock(
                             productDetail.getIngredient().getId(),
-                            productDetail.getQuantity(),
+                            productDetail.getQuantity() * orderDetail.getQuantity(),
                             productDetail.getMeasurementUnit());
 
                 }
